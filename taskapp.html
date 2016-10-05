@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Vue Task App</title>
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/taskapp.css">
+</head>
+<body>
+	<div id="app">
+		<task-list :list="tasks"></task-list>
+	</div><!-- end of Vue app container -->
+	
+	<template id="task-list-tpl" v-bind:addFormVisible.sync="addFormVisible">
+		<h1>My Tasks ({{ remaining }})</h1>
+		
+		<span>Filter:</span>
+		<form id="filter" v-bind:search.sync="search">
+			<input v-model.trim="search">
+			<i class="fa fa-times-circle" aria-hidden="true" v-on:click="search = ''"></i>
+		</form>
+		
+		<ul v-show="list.length > 0" v-bind:selected="selected">
+			<li class="list-item flex-container"
+				v-for="(index, task) in list | filterBy search"
+				v-bind:class="{completed: task.completed, selected: index == selected}"
+				v-on:click="select(index)">
+				
+				<div>
+					<input type="checkbox" v-model="task.completed">
+
+					<!-- Task body: -->
+					<span v-show="!task.editing">{{ task.body }}</span>
+					<input v-show="task.editing" v-model="task.body">
+				</div>
+				
+				<div>
+					<!-- Colours: -->				
+					<span v-for="(i, c) in task.colours | filterBy search"
+						  class="colour"
+						  v-bind:class="c"
+						  v-on:click="deleteColour(c)">
+					</span>
+					<!-- Tags: -->
+					<span v-for="(i, t) in task.tags | filterBy search"
+						  class="tag"
+						  v-on:click="deleteTag(t)">
+						  {{ t }}
+					</span>
+					
+					<!-- Task actions: -->
+					<span class="editBtn" v-on:click="toggleEditTask(task)">
+						{{ task.editing ? 'Save' : 'Edit' }}
+					</span>
+					<i class="fa fa-trash-o" aria-hidden="true" v-on:click="deleteTask(task)"></i>
+				</div>
+			</li>
+		</ul>
+		<p v-else>No tasks here.</p>
+				
+		<form id="add-task-form" v-show="addFormVisible">
+			<input type="text" v-model="newTaskBody" placeholder="New task">
+			<button v-on:click.prevent="addTask(newTaskBody)">Add</button>
+			<button v-on:click.prevent="toggleAddForm">Cancel</button>
+		</form>
+		
+		<form id="task-buttons" v-show="!addFormVisible">
+			<button v-on:click.prevent="toggleAddForm">Add Task</button>
+			<button v-show="list.length > 0" v-on:click.prevent="clearCompleted">Clear Completed</button>
+		</form>
+		
+		<div id="tag-list">
+			<p>Tags:</p>
+			<span v-for="t in ['5min', '15min', '30min', '45min', '1h', '1.5h', '2h+']"
+				  class="tag"
+				  v-on:click="addTag(t)">
+				  {{ t }}
+			</span>
+		</div>
+		
+		<div id="colour-list">
+			<p>Colours:</p>
+			<span v-for="c in ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink']" 
+				  class="colour" :class="c"
+				  v-on:click="addColour(c)">
+			</span>
+		</div>
+		
+	</template>
+			
+	
+	<!--script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.1/vue.js"></script-->
+	<script src="js/zepto.min.js"></script>
+	<script src="js/vue.1.0.28.js"></script>
+	<script src="js/taskapp.js"></script>
+	<script src="https://use.fontawesome.com/bfab10ea54.js"></script>
+</body>
+</html>

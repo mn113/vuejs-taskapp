@@ -1,0 +1,156 @@
+/*
+ * GENERAL
+ */
+html, body {
+	height: 100%;
+}
+body: {
+	font-size: 100%;
+	color: #111;
+}
+#app {
+	margin: 1em;
+}
+
+
+/*
+ * LIST OF TASKS
+ */
+ul {
+	list-style: none;
+	padding: 0;
+}
+li.list-item {
+	padding: 5px;
+	border: 1px solid #aaa;
+	min-width: 200px;
+}
+.flex-container {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row wrap;
+	justify-content: space-between;
+}
+.flex-container > div {
+	border: 1px dashed fuchsia;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+li:not(:last-child) {
+	border-bottom: 0px;
+}
+li.completed {
+	text-decoration: line-through;
+	color: #999;
+}
+li.selected {
+	background: #def;
+}
+.list-item input[type=text] {
+	min-width: 80%;
+}
+
+
+/*
+ * TAGS & COLOURS SECTION
+ */
+.tag {
+	font-size: 0.7em;
+	color: white;
+	border-radius: 10px;
+	padding: 1px 4px;
+	background: #bbb;
+	border: 1px solid #999;
+	margin: 0 1px;
+	min-width: 2em;
+	text-align: center;
+}
+.colour {
+	display: inline-block;
+	min-width: 10px;
+	min-height: 10px;
+	border-radius: 6px;
+	margin: 0 1px;
+}
+.list-item .colour,
+.list-item .tag {
+	xfloat: right;
+}
+.list-item.selected .colour:hover,
+.list-item.selected .tag:hover {
+	background: #bbb url(../x.png) center center no-repeat;
+	color: #bbb;	/* hides text */
+	cursor: pointer;
+}
+
+.red { background: #f33; border: 1px solid #c00; }
+.orange { background: #f93; border: 1px solid #c60; }
+.yellow { background: #ff3; border: 1px solid #cc0; }
+.green { background: #3c3; border: 1px solid #090; }
+.blue { background: #39c; border: 1px solid #069; }
+.purple { background: #63c; border: 1px solid #309; }
+.pink { background: #c3c; border: 1px solid #909; }
+
+
+/*
+ * TASK ACTIONS
+ */
+.editBtn {
+	color: #666;
+	xfloat: right;
+	padding-right: 1em;
+	font-size: 0.8em;
+}
+.editBtn:hover {
+	cursor: pointer;
+	color: cadetblue;
+}
+.completed .editBtn {
+	display: none;
+}
+.fa:hover {
+	cursor: pointer;
+}
+.fa-trash-o {
+	xfloat: right;
+}
+
+
+/*
+ * FILTER SECTION
+ */
+
+#filter {
+	border: 1px solid #aaa;
+	border-radius: 12px;
+	padding: 3px 6px;
+	min-width: 250px;
+	position: relative;
+}
+#filter input {
+	border: 0;
+	width: 95%;
+}
+#filter .fa-times-circle {
+	position: absolute;
+	top: 4px;
+	right: 6px;
+}
+
+
+/*
+ * LOWER TAGS SECTION
+ */
+#tag-list, #colour-list {
+	border: 1px solid #999;
+	padding: 0.5em;
+	margin: 0.5em 0;
+	width: 50%;
+}
+p {
+	margin: 0 0 0.4em 0;
+}
