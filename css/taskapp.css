@@ -33,17 +33,25 @@ li.list-item {
 	display: flex;
 	-webkit-flex-flow: row wrap;
 	justify-content: space-between;
+	flex-wrap: nowrap;
 }
-.flex-container > div {
-	border: 1px dashed fuchsia;
+.flex-container > .group {
+	xborder: 1px dashed fuchsia;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 }
+.group:first-child {
+	flex-basis: 90%;
+}
+.group:last-child {
+	flex-basis: 60px;
+	justify-content: flex-end;
+}
 li:not(:last-child) {
 	border-bottom: 0px;
 }
-li.completed {
+li.completed .task-body {
 	text-decoration: line-through;
 	color: #999;
 }
@@ -53,6 +61,13 @@ li.selected {
 .list-item input[type=text] {
 	min-width: 80%;
 }
+.list-item input[type=checkbox] {
+	margin-right: 4px;
+}
+
+/*
+ * BUTTONS
+ */
 
 
 /*
@@ -102,7 +117,7 @@ li.selected {
 .editBtn {
 	color: #666;
 	xfloat: right;
-	padding-right: 1em;
+	padding: 0 0.8em;
 	font-size: 0.8em;
 }
 .editBtn:hover {
@@ -140,7 +155,9 @@ li.selected {
 	top: 4px;
 	right: 6px;
 }
-
+*:focus {
+    outline: none;
+}
 
 /*
  * LOWER TAGS SECTION
