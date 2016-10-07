@@ -1,3 +1,4 @@
+/*global Vue, Sortable */
 Vue.component('taskList' , {
 	template: "#task-list-tpl",
 	props: [
@@ -23,7 +24,7 @@ Vue.component('taskList' , {
 			var task,
 				max = 0;
 			for (task in this.list) {
-				var tid = parseInt(this.list[task].id);
+				var tid = parseInt(this.list[task].id, 10);
 				if (tid > max) {
 					max = tid;
 				}
@@ -58,6 +59,9 @@ Vue.component('taskList' , {
 		},
 		toggleAddForm: function() {
 			this.addFormVisible = !this.addFormVisible;
+			if (this.addFormVisible) {
+				document.querySelector('input[name=new-task]').focus();	// FOCUS NOT WORKING
+			}
 		},
 		addTask: function(newTaskBody) {
 			// Validation:
@@ -68,8 +72,7 @@ Vue.component('taskList' , {
 				body: newTaskBody,
 				completed: false,
 				tags: [],
-				colours: [],
-				order: this.list.length
+				colours: []
 			};
 			// Add task:
 			this.list.push(newTask);
@@ -127,17 +130,17 @@ Vue.component('taskList' , {
 		deleteColour: function(colour) {
 			var i = this.list[this.selectedId].colours.indexOf(colour);
 			this.list[this.selectedId].colours.splice(i, 1);
-		}		
+		}
 	}
 });
 
 var tasks = [
-	{ id: 0, order: 0, body: 'Go to the bank', completed: false, tags: ['30min'], colours: ['red'] },
-	{ id: 1, order: 1, body: 'Go to the bonk', completed: false, tags: ['1h'], colours: ['blue'] },
-	{ id: 2, order: 2, body: 'Go to the bunk', completed: false, tags: ['2h+'], colours: ['orange', 'green'] }
+	{ id: 0, body: 'Go to the bank', completed: false, tags: ['30min'], colours: ['red'] },
+	{ id: 1, body: 'Go to the bonk', completed: false, tags: ['1h'], colours: ['blue'] },
+	{ id: 2, body: 'Go to the bunk', completed: false, tags: ['2h+'], colours: ['orange', 'green'] }
 ];
 
-new Vue({
+var vm = new Vue({
 	config: {
 		debug: true
 	},
@@ -150,7 +153,7 @@ new Vue({
 	ready: function() {
 		// load state when app loads:
 		if (localStorage.taskAppData) {
-			this.loadAll();					// OK
+			this.loadAll();
 		}
 	},
 	
@@ -177,20 +180,15 @@ new Vue({
 });
 
 
+// Sortable.js
+var list = document.getElementById("task-ul");
+Sortable.create(list, {
+	// Reposition the dragged list item within the original data array:
+	onSort: function(evt) {
+		console.log(evt.oldIndex + ' > ' + evt.newIndex);
+		// Switcharoo:
+		var moved = vm.$refs.foo.list.splice(evt.oldIndex, 1);
+		vm.$refs.foo.list.splice(evt.newIndex, 0, moved[0]);
+	}
+});
 
-// Zepto.js
-/*
-// Click item to select:
-$(".list-item").click(function() {
-	console.log("on!");
-	// Remove all other selected classes:
-	$(".selected").removeClass("selected");
-	// Set class on this element:
-	$(this).addClass("selected");
-});
-// Click away to deselect:
-$("h1, .selected").click(function() {
-	console.log("off!");
-	$(".selected").removeClass("selected");	
-});
-*/

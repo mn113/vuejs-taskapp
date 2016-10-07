@@ -9,7 +9,7 @@ body: {
 	color: #111;
 }
 #app {
-	margin: 1em;
+	margin: 1em 1em;
 }
 
 
@@ -159,6 +159,7 @@ li.selected {
     outline: none;
 }
 
+
 /*
  * LOWER TAGS SECTION
  */
@@ -170,4 +171,28 @@ li.selected {
 }
 p {
 	margin: 0 0 0.4em 0;
+}
+
+
+/*
+ * DRAG & DROP
+ */
+[draggable] {
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	/* Required to make elements draggable in old WebKit */
+	-khtml-user-drag: element;
+	-webkit-user-drag: element;
+}
+.dragging {
+	opacity: 0.8;
+	color: #6894D1;
+}
+.drag-over {
+	text-decoration: underline;
+}
+.drag-enter {
+	color: #C93742;
 }
