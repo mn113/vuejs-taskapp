@@ -11,11 +11,14 @@
 </head>
 <body>
 	<div id="app">
-		<task-list v-bind:list="tasks" v-ref:foo></task-list>
-		<p> {{ $data | json }}</p>
+		<task-list v-ref:task-list v-bind:list="tasks"></task-list>
+		<ui v-ref:ui v-bind:tags="tags" v-bind:colours="colours"></ui>
+		<p>SelectedId: {{ selectedId }}<br>EditingId: {{ editingId }}</p>
+		<p> {{ $refs.ui.tags | json }}</p>
 	</div>
 	<!-- end of Vue app container -->
 
+	<!-- First component template -->
 	<template id="task-list-tpl" v-on:click="selectedId = null">
 		<h1>My Tasks ({{ remaining }})</h1>
 
@@ -45,20 +48,20 @@
 				<div class="group">
 					<!-- Colours: -->
 					<span v-for="(i, c) in task.colours | filterBy search"
-						  class="colour" v-bind:class="c" v-on:click="deleteColour(c)">
+						  class="colour" v-bind:class="c" v-on:click="deleteColour(task.id, c)">
 					</span>
 					<!-- Tags: -->
 					<span v-for="(i, t) in task.tags | filterBy search"
-					  	  class="tag" v-on:click="deleteTag(t)">
+					  	  class="tag" v-on:click="deleteTag(task.id, t)">
 						  {{ t }}
 					</span>
 				</div>
 				<div class="group">
 					<!-- Task actions: -->
-					<span class="editBtn" v-on:click="edit(task.id)">
+					<span class="editBtn" v-on:click="editTask(task.id)">
 						{{ editingId == task.id ? 'Save' : 'Edit' }}
 					</span>
-					<i class="fa fa-trash-o" aria-hidden="true" v-on:click="deleteTask(task)"></i>
+					<i class="fa fa-trash-o" aria-hidden="true" v-on:click="deleteTask(task.id)"></i>
 				</div>
 			</li>
 		</ul>
@@ -70,27 +73,38 @@
 				<button v-show="list.length > 0" v-on:click.prevent="clearCompleted">Clear Completed</button>
 			</form>
 		</div>
+	</template>
 
-		<p>SelectedId: {{ selectedId }}<br>EditingId: {{ editingId }}</p>
-
-		<div id="tag-list">
-			<p>Tags:</p>
-			<span v-for="t in ['5min', '15min', '30min', '45min', '1h', '1.5h', '2h+']"
-			  	  class="tag"
-				  v-on:click="addTag(t)">
-				  {{ t }}
-			</span>
+	<!-- Second component template -->
+	<template id="ui-tpl">
+		<div id="tag-list" v-bind:class="{editing: editingTags}">
+			<p>Tags:
+				<span class="editBtn" v-on:click="toggleEditingGlobalTags">
+					{{ editingTags ? 'Close' : 'Edit' }}
+				</span>
+			</p>
+			<div class="flex-container">
+				<span v-for="t in tags">
+					<span class="tag" v-on:click="$parent.$refs.task-list.addTag(t)">
+					  {{ t }}
+					</span>
+					<i v-show="editingTags" class="fa fa-trash-o" aria-hidden="true" v-on:click="deleteGlobalTag(t)"></i>
+				</span>
+			</div>
+			<form v-show="editingTags">
+				<input size="10" v-model.trim="newTag" placeholder="tag" v-on:keyup.enter="addGlobalTag(newTag)">
+				<button type="submit" v-on:click.prevent="addGlobalTag(newTag)">Add Tag</button>
+			</form>
 		</div>
 
 		<div id="colour-list">
 			<p>Colours:</p>
-			<span v-for="c in ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink']"
+			<span v-for="c in colours"
 				  class="colour"
 				  :class="c"
 				  v-on:click="addColour(c)">
 			</span>
 		</div>
-
 	</template>
 
 
@@ -102,5 +116,4 @@
 	<script src="js/taskapp.js"></script>
 	<script src="https://use.fontawesome.com/bfab10ea54.js"></script>
 </body>
-
 </html>

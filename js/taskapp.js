@@ -36,7 +36,7 @@ var vc = Vue.component('taskList' , {
 
 	watch: {
 		selectedId: function() {
-			console.log('item with index', this.selectedId, 'selected');
+			console.log('item with task.id', this.selectedId, 'selected');
 		}
 	},
 
@@ -46,12 +46,12 @@ var vc = Vue.component('taskList' , {
 			var task = this.list[this.findSelectedTask()];
 			task.completed = !task.completed;
 		},
-/*		isCompleted: function(task) {
+		isCompleted: function(task) {
 			return task.completed;
 		},
 		notCompleted: function(task) {
 			return !task.completed;
-		},*/
+		},
 		deleteTask: function(taskId) {
 			// Find referenced task by id:
 			var task = this.list[this.findSelectedTask()];
@@ -62,27 +62,7 @@ var vc = Vue.component('taskList' , {
 			// Set list as only our incomplete tasks (others will simply vanish)
 			this.list = this.list.filter(this.notCompleted);
 		},
-/*		addTask: function(newTaskBody) {
-			// Validation:
-			if (!newTaskBody) { return false; }	// Will simply do nothing
-			// Build task:
-			var newTask = {
-				id: this.nextTaskId,
-				body: newTaskBody,
-				completed: false,
-				tags: [],
-				colours: []
-			};
-			// Add task:
-			this.list.push(newTask);
-			console.log('task with id', newTask.id, 'added');
-			// Increment id tracker:
-			this.nextTaskId++;
-			// Reset & hide form:
-			this.newTaskBody = '';
-			this.toggleAddForm();
-		},*/
-		edit: function(taskId) {
+		editTask: function(taskId) {
 			// Finish editing if already editing:
 			if (taskId === this.editingId) {
 				this.editingId = null;
@@ -92,15 +72,11 @@ var vc = Vue.component('taskList' , {
 				this.editingId = taskId;
 			}
 		},
-		select: function(taskId) {
-			// Deselect item if already selected:
-//			if (taskId === this.selectedId) {
-//				this.selectedId = null;
-//			}
-//			else {
-				// Now set selected item:
-				this.selectedId = taskId;
-//			}
+		select: function(taskId) {	// COMBINE TWO FUNCTIONS?
+			this.selectedId = taskId;
+		},
+		setSelectedTask: function(index) {
+			this.selectedId = this.list[index].id;
 		},
 		findSelectedTask: function() {
 			var position = null;
@@ -114,8 +90,23 @@ var vc = Vue.component('taskList' , {
 			}
 			return position;
 		},
-		setSelectedTask: function(index) {
-			this.selectedId = this.list[index].id;
+		selectUp: function() {
+			// Get list index from selectedId:
+			var selectedPos = this.findSelectedTask();
+			if (selectedPos > 0) {
+				selectedPos--;
+			}
+			// Set selectedId to new list index:
+			this.setSelectedTask(selectedPos);
+		},
+		selectDown: function() {
+			// Get list index from selectedId:
+			var selectedPos = this.findSelectedTask();
+			if (selectedPos < this.list.length - 1) {
+				selectedPos++;
+			}
+			// Set selectedId to new list index:
+			this.setSelectedTask(selectedPos);
 		},
 		addTag: function(tag) {
 			// Where to add it?
@@ -138,17 +129,21 @@ var vc = Vue.component('taskList' , {
 				}
 			}
 		},
-		deleteTag: function(tag) {
+		deleteTag: function(tid, tag) {
 			// Where to delete it?
-			var position = this.findSelectedTask();
+			var position = this.list.findIndex(function(element) {
+				return (element.id == tid);
+			});
 			if (position) {
 				var i = this.list[position].tags.indexOf(tag);
 				this.list[position].tags.splice(i, 1);
 			}
 		},
-		deleteColour: function(colour) {
+		deleteColour: function(tid, colour) {
 			// Where to delete it?
-			var position = this.findSelectedTask();
+			var position = this.list.findIndex(function(element) {
+				return (element.id == tid);
+			});
 			if (position) {
 				var i = this.list[position].colours.indexOf(colour);
 				this.list[position].colours.splice(i, 1);
@@ -170,32 +165,46 @@ var vc = Vue.component('taskList' , {
 			console.log('task with id', newTask.id, 'added');
 			// Increment id tracker:
 			this.nextTaskId++;
-		},
-		selectUp: function() {
-			// Get list index from selectedId:
-			var selectedPos = this.findSelectedTask();
-			if (selectedPos > 0) {
-				selectedPos--;
-			}
-			// Set selectedId to new list index
-			this.setSelectedTask(selectedPos);
-		},
-		selectDown: function() {
-			// Get list index from selectedId:
-			var selectedPos = this.findSelectedTask();
-			if (selectedPos < this.list.length - 1) {
-				selectedPos++;
-			}
-			// Set selectedId to new list index
-			this.setSelectedTask(selectedPos);
 		}
 	}
 });
 
-var tasks = [
+var vmui = Vue.component('ui' , {
+	template: "#ui-tpl",
+	props: [
+		'tags',
+		'colours'
+	],
+	data: function() {
+		return {
+			editingTags: false,
+			newTag: ''
+		};
+	},
+	methods: {
+		toggleEditingGlobalTags: function() {
+			// Simply to show/hide editing area
+			this.editingTags = !this.editingTags;
+		},
+		addGlobalTag: function(tag) {
+			if (this.tags.indexOf(tag) === -1) {
+				this.tags.push(tag);
+			}
+			this.newTag = '';
+		},
+		deleteGlobalTag: function(tag) {
+			var index = this.tags.indexOf(tag);
+			if (index !== -1) {
+				this.tags.splice(index, 1);
+			}
+		}
+	}
+});
+
+var exampleTasks = [
 	{ id: 0, body: 'Go to the bank', completed: false, tags: ['30min'], colours: ['red'] },
-	{ id: 1, body: 'Go to the bonk', completed: false, tags: ['1h'], colours: ['blue'] },
-	{ id: 2, body: 'Go to the bunk', completed: false, tags: ['2h+'], colours: ['orange', 'green'] }
+	{ id: 1, body: 'Buy 5 gallons of milk', completed: false, tags: ['5min'], colours: ['blue'] },
+	{ id: 2, body: 'Finish programming app', completed: false, tags: ['2h+'], colours: ['orange', 'green'] }
 ];
 
 var vm = new Vue({
@@ -205,7 +214,9 @@ var vm = new Vue({
 	el: "#app",
 
 	data: {
-		tasks: tasks
+		tasks: exampleTasks,
+		tags: ['5min', '15min', '30min', '45min', '1h', '1.5h', '2h+'],
+		colours: ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink']
 	},
 
 	ready: function() {
@@ -216,7 +227,7 @@ var vm = new Vue({
 	},
 
 	watch: {
-		// save state when data.tasks changes:
+		// save state whenever data.tasks changes:
 		tasks: {
 			handler: function(newData, oldData) {
 				this.saveAll();
@@ -245,25 +256,25 @@ Sortable.create(list, {
 	onSort: function(evt) {
 		console.log(evt.oldIndex + ' > ' + evt.newIndex);
 		// Switcharoo:
-		var moved = vm.$refs.foo.list.splice(evt.oldIndex, 1);
-		vm.$refs.foo.list.splice(evt.newIndex, 0, moved[0]);
+		var moved = vm.$refs.task-list.list.splice(evt.oldIndex, 1);
+		vm.$refs.task-list.list.splice(evt.newIndex, 0, moved[0]);
 	}
 });
 
 
 // KeyCodes:
 // Move up:
-Mousetrap.bind('up', function() { vm.$refs.foo.selectUp(); });	// OK
+Mousetrap.bind('up', function() { vm.$refs.task-list.selectUp(); });	// OK
 // Move down:
-Mousetrap.bind('down', function() { vm.$refs.foo.selectDown(); });	// OK
+Mousetrap.bind('down', function() { vm.$refs.task-list.selectDown(); });	// OK
 // Enter = toggle editing selected task:
-Mousetrap.bind('enter', function() { vm.$refs.foo.edit(vm.$refs.foo.selectedId); });		// OK
+Mousetrap.bind('enter', function() { vm.$refs.task-list.editTask(vm.$refs.task-list.selectedId); });		// OK
 // x = toggle completed:
-Mousetrap.bind('x', function() { vm.$refs.foo.toggleCompleted(vm.$refs.foo.selectedId); });	// OK
+Mousetrap.bind('x', function() { vm.$refs.task-list.toggleCompleted(vm.$refs.task-list.selectedId); });	// OK
 // T = trash selected task:
-Mousetrap.bind('T', function() { vm.$refs.foo.deleteTask(vm.$refs.foo.selectedId); });	// OK
+Mousetrap.bind('T', function() { vm.$refs.task-list.deleteTask(vm.$refs.task-list.selectedId); });	// OK
 // n = new task:
-Mousetrap.bind('n', function() { vm.$refs.foo.newTask(); });	// OK
+Mousetrap.bind('n', function() { vm.$refs.task-list.newTask(); });	// OK
 
 /*/ 1-9 = tags
 var j;
