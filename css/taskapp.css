@@ -93,11 +93,10 @@ li.selected {
 }
 .list-item .colour,
 .list-item .tag {
-	xfloat: right;
 }
 .list-item.selected .colour:hover,
 .list-item.selected .tag:hover {
-	background: #bbb url(../x.png) center center no-repeat;
+	background: #bbb url(../img/x.png) center center no-repeat;
 	color: #bbb;	/* hides text */
 	cursor: pointer;
 }
@@ -116,7 +115,6 @@ li.selected {
  */
 .editBtn {
 	color: #666;
-	xfloat: right;
 	padding: 0 0.8em;
 	font-size: 0.8em;
 }

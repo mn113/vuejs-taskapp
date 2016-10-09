@@ -1,24 +1,25 @@
 /*global Vue, Sortable */
-Vue.component('taskList' , {
+var vc = Vue.component('taskList' , {
 	template: "#task-list-tpl",
 	props: [
 		'list'				// template binding: list = root.tasks
 	],
-	
+
 	data: function() {
 		return {
 			addFormVisible: false,
 			search: '',
 			selectedId: null,
-			editingId: null
+			editingId: null,
+			trash: []
 		};
 	},
-	
+
 	computed: {
 		remaining: function() {
 			return this.list.filter(this.notCompleted).length;
 		},
-		
+
 		nextTaskId: function() {	// must always increment to avoid duplication of ids
 		// Set next available TaskId as last item's id + 1:
 			var task,
@@ -29,27 +30,31 @@ Vue.component('taskList' , {
 					max = tid;
 				}
 			}
-			return max + 1;			// should initialise to 3
+			return max + 1;
 		}
 	},
-	
+
 	watch: {
 		selectedId: function() {
 			console.log('item with index', this.selectedId, 'selected');
 		}
 	},
-	
+
 	methods: {
-		toggleCompleted: function(task) {
+		toggleCompleted: function(taskId) {
+			// Find referenced task by id:
+			var task = this.list[this.findSelectedTask()];
 			task.completed = !task.completed;
 		},
-		isCompleted: function(task) {
+/*		isCompleted: function(task) {
 			return task.completed;
 		},
 		notCompleted: function(task) {
 			return !task.completed;
-		},
-		deleteTask: function(task) {
+		},*/
+		deleteTask: function(taskId) {
+			// Find referenced task by id:
+			var task = this.list[this.findSelectedTask()];
 			var index = this.list.indexOf(task);
 			this.list.splice(index, 1);
 		},
@@ -57,13 +62,7 @@ Vue.component('taskList' , {
 			// Set list as only our incomplete tasks (others will simply vanish)
 			this.list = this.list.filter(this.notCompleted);
 		},
-		toggleAddForm: function() {
-			this.addFormVisible = !this.addFormVisible;
-			if (this.addFormVisible) {
-				document.querySelector('input[name=new-task]').focus();	// FOCUS NOT WORKING
-			}
-		},
-		addTask: function(newTaskBody) {
+/*		addTask: function(newTaskBody) {
 			// Validation:
 			if (!newTaskBody) { return false; }	// Will simply do nothing
 			// Build task:
@@ -82,54 +81,113 @@ Vue.component('taskList' , {
 			// Reset & hide form:
 			this.newTaskBody = '';
 			this.toggleAddForm();
-		},
+		},*/
 		edit: function(taskId) {
 			// Finish editing if already editing:
 			if (taskId === this.editingId) {
 				this.editingId = null;
 			}
 			else {
-				// Now set selected item:
+				// Now set editing item:
 				this.editingId = taskId;
 			}
 		},
 		select: function(taskId) {
 			// Deselect item if already selected:
-			if (taskId === this.selectedId) {
-				this.selectedId = null;
-			}
-			else {
+//			if (taskId === this.selectedId) {
+//				this.selectedId = null;
+//			}
+//			else {
 				// Now set selected item:
 				this.selectedId = taskId;
+//			}
+		},
+		findSelectedTask: function() {
+			var position = null;
+			// Check an item is selected:
+			if (this.selectedId) {
+				var selId = this.selectedId;
+				// Find it by id within the task list:
+				position = this.list.findIndex(function(element) {
+					return (element.id == selId);
+				});
 			}
+			return position;
+		},
+		setSelectedTask: function(index) {
+			this.selectedId = this.list[index].id;
 		},
 		addTag: function(tag) {
-			// Check something selected:
-			if (this.selectedId) {
-				// Check it doesn't exist:
-				if (this.list[this.selectedId].tags.indexOf(tag) === -1) {
-					// Update data:
-					this.list[this.selectedId].tags.push(tag);
+			// Where to add it?
+			var position = this.findSelectedTask();
+			if (position) {
+				// Check tag doesn't exist on item:
+				if (this.list[position].tags.indexOf(tag) === -1) {
+					// Update tags data:
+					this.list[position].tags.push(tag);
 				}
 			}
 		},
 		addColour: function(colour) {
-			// Check something selected:
-			if (this.selectedId) {
-				// Check it doesn't exist:
-				if (this.list[this.selectedId].colours.indexOf(colour) === -1) {
-					// Update data:
-					this.list[this.selectedId].colours.push(colour);
+			// Where to add it?
+			var position = this.findSelectedTask();
+			if (position) {
+				if (this.list[position].colours.indexOf(colour) === -1) {
+					// Update tags data:
+					this.list[position].colours.push(colour);
 				}
 			}
 		},
 		deleteTag: function(tag) {
-			var i = this.list[this.selectedId].tags.indexOf(tag);
-			this.list[this.selectedId].tags.splice(i, 1);			
+			// Where to delete it?
+			var position = this.findSelectedTask();
+			if (position) {
+				var i = this.list[position].tags.indexOf(tag);
+				this.list[position].tags.splice(i, 1);
+			}
 		},
 		deleteColour: function(colour) {
-			var i = this.list[this.selectedId].colours.indexOf(colour);
-			this.list[this.selectedId].colours.splice(i, 1);
+			// Where to delete it?
+			var position = this.findSelectedTask();
+			if (position) {
+				var i = this.list[position].colours.indexOf(colour);
+				this.list[position].colours.splice(i, 1);
+			}
+		},
+		newTask: function() {
+			// Build task:
+			var newTask = {
+				id: this.nextTaskId,
+				body: '',
+				completed: false,
+				tags: [],
+				colours: []
+			};
+			// Add task, selected & open for editing & focused:
+			this.list.push(newTask);
+			this.editingId = newTask.id;
+			this.selectedId = newTask.id;
+			console.log('task with id', newTask.id, 'added');
+			// Increment id tracker:
+			this.nextTaskId++;
+		},
+		selectUp: function() {
+			// Get list index from selectedId:
+			var selectedPos = this.findSelectedTask();
+			if (selectedPos > 0) {
+				selectedPos--;
+			}
+			// Set selectedId to new list index
+			this.setSelectedTask(selectedPos);
+		},
+		selectDown: function() {
+			// Get list index from selectedId:
+			var selectedPos = this.findSelectedTask();
+			if (selectedPos < this.list.length - 1) {
+				selectedPos++;
+			}
+			// Set selectedId to new list index
+			this.setSelectedTask(selectedPos);
 		}
 	}
 });
@@ -145,18 +203,18 @@ var vm = new Vue({
 		debug: true
 	},
 	el: "#app",
-	
+
 	data: {
 		tasks: tasks
 	},
-	
+
 	ready: function() {
 		// load state when app loads:
 		if (localStorage.taskAppData) {
 			this.loadAll();
 		}
 	},
-	
+
 	watch: {
 		// save state when data.tasks changes:
 		tasks: {
@@ -166,7 +224,7 @@ var vm = new Vue({
 			deep: true
 		}
 	},
-	
+
 	methods: {
 		saveAll: function() {
 			localStorage.setItem('taskAppData', JSON.stringify(this.tasks));
@@ -192,3 +250,24 @@ Sortable.create(list, {
 	}
 });
 
+
+// KeyCodes:
+// Move up:
+Mousetrap.bind('up', function() { vm.$refs.foo.selectUp(); });	// OK
+// Move down:
+Mousetrap.bind('down', function() { vm.$refs.foo.selectDown(); });	// OK
+// Enter = toggle editing selected task:
+Mousetrap.bind('enter', function() { vm.$refs.foo.edit(vm.$refs.foo.selectedId); });		// OK
+// x = toggle completed:
+Mousetrap.bind('x', function() { vm.$refs.foo.toggleCompleted(vm.$refs.foo.selectedId); });	// OK
+// T = trash selected task:
+Mousetrap.bind('T', function() { vm.$refs.foo.deleteTask(vm.$refs.foo.selectedId); });	// OK
+// n = new task:
+Mousetrap.bind('n', function() { vm.$refs.foo.newTask(); });	// OK
+
+/*/ 1-9 = tags
+var j;
+for (j = 1; j <= 7; j++) {
+	Mousetrap.bind(j, function() { vc.addTag(tags[j-1]); });	// exists
+}
+*/

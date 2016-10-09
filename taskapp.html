@@ -12,33 +12,36 @@
 <body>
 	<div id="app">
 		<task-list v-bind:list="tasks" v-ref:foo></task-list>
+		<p> {{ $data | json }}</p>
 	</div>
 	<!-- end of Vue app container -->
-	
-	<template id="task-list-tpl">
+
+	<template id="task-list-tpl" v-on:click="selectedId = null">
 		<h1>My Tasks ({{ remaining }})</h1>
-		
+
 		<span>Filter:</span>
 		<form id="filter" v-bind:search="search">
 			<input v-model.trim="search">
 			<i class="fa fa-times-circle" aria-hidden="true" v-on:click="search = ''"></i>
 		</form>
-		
+
 		<ul id="task-ul" v-show="list.length > 0">
 			<li class="list-item flex-container"
 				v-for="(index, task) in list | filterBy search"
 				data-id="{{ index }}"
-				v-bind:class="{completed: task.completed, selected: index == selectedId}" 
-				v-on:click="select(index)">
-				
+				v-bind:class="{completed: task.completed, selected: task.id == selectedId}"
+				v-on:click="select(task.id)">
+
 				<div class="group">
+					{{ index }}
 					<input type="checkbox" v-model="task.completed">
-					
+
 					<!-- Task body: -->
-					<span v-show="editingId !== index" class="task-body">{{ task.body }}</span>
-					<input v-show="editingId == index" v-model="task.body" v-on:keyup.enter="editingId = null">
+					<span v-show="editingId !== task.id" class="task-body">{{ task.body }} {{ task.id }}</span>
+					<input v-show="editingId == task.id" v-model="task.body" placeholder="New task"
+						   v-on:keyup.enter="editingId = null">
 				</div>
-				
+
 				<div class="group">
 					<!-- Colours: -->
 					<span v-for="(i, c) in task.colours | filterBy search"
@@ -52,30 +55,24 @@
 				</div>
 				<div class="group">
 					<!-- Task actions: -->
-					<span class="editBtn" v-on:click="edit(index)">
-						{{ editingId == index ? 'Save' : 'Edit' }}
+					<span class="editBtn" v-on:click="edit(task.id)">
+						{{ editingId == task.id ? 'Save' : 'Edit' }}
 					</span>
 					<i class="fa fa-trash-o" aria-hidden="true" v-on:click="deleteTask(task)"></i>
 				</div>
 			</li>
 		</ul>
 		<p v-else>No tasks here.</p>
-		
-		<div v-bind:addFormVisible.sync="addFormVisible">
-			<form id="add-task-form" v-show="addFormVisible">
-				<input type="text" name="new-task" autofocus
-				       v-model="newTaskBody" placeholder="New task"
-					   v-on:keyup.enter="addTask(newTaskBody)">
-				<button v-on:click.prevent="addTask(newTaskBody)">Add</button>
-				<button v-on:click.prevent="toggleAddForm">Cancel</button>
-			</form>
-			
-			<form id="task-buttons" v-show="!addFormVisible">
-				<button v-on:click.prevent="toggleAddForm">Add Task</button>
+
+		<div>
+			<form id="task-buttons">
+				<button v-on:click.prevent="newTask" v-on:keyup.n="newTask">Add Task</button>
 				<button v-show="list.length > 0" v-on:click.prevent="clearCompleted">Clear Completed</button>
 			</form>
 		</div>
-		
+
+		<p>SelectedId: {{ selectedId }}<br>EditingId: {{ editingId }}</p>
+
 		<div id="tag-list">
 			<p>Tags:</p>
 			<span v-for="t in ['5min', '15min', '30min', '45min', '1h', '1.5h', '2h+']"
@@ -84,7 +81,7 @@
 				  {{ t }}
 			</span>
 		</div>
-		
+
 		<div id="colour-list">
 			<p>Colours:</p>
 			<span v-for="c in ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink']"
@@ -99,6 +96,7 @@
 
 	<!--script src="js/zepto.min.js"></script-->
 	<!--script src="js/vue.2.0.1.js"></script-->
+	<script src="js/mousetrap.js"></script>
 	<script src="js/vue.1.0.28.js"></script>
 	<script src="js/Sortable.js"></script>
 	<script src="js/taskapp.js"></script>
