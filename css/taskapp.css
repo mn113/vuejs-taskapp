@@ -106,24 +106,6 @@ li.selected {
 .purple { background: #63c; border: 1px solid #309; }
 .pink { background: #c3c; border: 1px solid #909; }
 
-.editing > div {
-	-webkit-flex-flow: column wrap;
-	justify-content: space-between;
-	flex-wrap: nowrap;
-}
-.editing > div > span {
-	display: flex;
-	margin-bottom: 4px;
-	justify-content: flex-start;
-}
-.editing > div > span > .tag {
-	flex-basis: 20%;
-	margin-right: 1em;
-}
-.editing input {
-	border: 1px solid #999;
-}
-
 
 /*
  * TASK ACTIONS
@@ -184,6 +166,26 @@ input:focus {
 }
 p {
 	margin: 0 0 0.4em 0;
+}
+#tag-list .editBtn {
+	float: right;
+}
+.editing > div {
+	-webkit-flex-flow: column wrap;
+	justify-content: space-between;
+	flex-wrap: nowrap;
+}
+.editing > div > span {
+	display: flex;
+	margin-bottom: 4px;
+	justify-content: flex-start;
+}
+.editing > div > span > .tag {
+	flex-basis: 20%;
+	margin-right: 1em;
+}
+.editing input {
+	border: 1px solid #999;
 }
 
 

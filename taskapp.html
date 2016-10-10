@@ -11,10 +11,11 @@
 </head>
 <body>
 	<div id="app">
-		<task-list v-ref:task-list v-bind:list="tasks"></task-list>
-		<ui v-ref:ui v-bind:tags="tags" v-bind:colours="colours"></ui>
-		<p>SelectedId: {{ selectedId }}<br>EditingId: {{ editingId }}</p>
-		<p> {{ $refs.ui.tags | json }}</p>
+		<task-list v-ref:taskList v-bind:list="tasks"></task-list>
+		<task-ui v-ref:taskUi v-bind:tags="tags" v-bind:colours="colours"></task-ui>
+		<p>SelectedId: {{ $refs.tasklist.selectedId }}<br>EditingId: {{ $refs.tasklist.editingId }}</p>
+		<p> {{ $refs.taskui.tags | json }}</p>
+		<p> {{ $data | json }}</p>
 	</div>
 	<!-- end of Vue app container -->
 
@@ -36,11 +37,10 @@
 				v-on:click="select(task.id)">
 
 				<div class="group">
-					{{ index }}
 					<input type="checkbox" v-model="task.completed">
 
 					<!-- Task body: -->
-					<span v-show="editingId !== task.id" class="task-body">{{ task.body }} {{ task.id }}</span>
+					<span v-show="editingId !== task.id" class="task-body">{{ task.body }}</span>
 					<input v-show="editingId == task.id" v-model="task.body" placeholder="New task"
 						   v-on:keyup.enter="editingId = null">
 				</div>
@@ -85,7 +85,7 @@
 			</p>
 			<div class="flex-container">
 				<span v-for="t in tags">
-					<span class="tag" v-on:click="$parent.$refs.task-list.addTag(t)">
+					<span class="tag" v-on:click="addTag(t)">
 					  {{ t }}
 					</span>
 					<i v-show="editingTags" class="fa fa-trash-o" aria-hidden="true" v-on:click="deleteGlobalTag(t)"></i>

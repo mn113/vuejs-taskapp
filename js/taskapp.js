@@ -1,5 +1,5 @@
 /*global Vue, Sortable */
-var vc = Vue.component('taskList' , {
+var vueListComponent = Vue.component('taskList' , {
 	template: "#task-list-tpl",
 	props: [
 		'list'				// template binding: list = root.tasks
@@ -13,6 +13,18 @@ var vc = Vue.component('taskList' , {
 			editingId: null,
 			trash: []
 		};
+	},
+
+	created: function() {
+		// Listen for message from the events bus:
+		bus.$on('addTag', function(t) {
+			this.addTag(t);
+		}.bind(this));
+
+		// Listen for message from the events bus:
+		bus.$on('addColour', function(c) {
+			this.addColour(c);
+		}.bind(this));
 	},
 
 	computed: {
@@ -111,7 +123,7 @@ var vc = Vue.component('taskList' , {
 		addTag: function(tag) {
 			// Where to add it?
 			var position = this.findSelectedTask();
-			if (position) {
+			if (position >= 0) {
 				// Check tag doesn't exist on item:
 				if (this.list[position].tags.indexOf(tag) === -1) {
 					// Update tags data:
@@ -122,7 +134,7 @@ var vc = Vue.component('taskList' , {
 		addColour: function(colour) {
 			// Where to add it?
 			var position = this.findSelectedTask();
-			if (position) {
+			if (position >= 0) {
 				if (this.list[position].colours.indexOf(colour) === -1) {
 					// Update tags data:
 					this.list[position].colours.push(colour);
@@ -169,7 +181,7 @@ var vc = Vue.component('taskList' , {
 	}
 });
 
-var vmui = Vue.component('ui' , {
+var vueUIComponent = Vue.component('taskUi' , {
 	template: "#ui-tpl",
 	props: [
 		'tags',
@@ -197,6 +209,14 @@ var vmui = Vue.component('ui' , {
 			if (index !== -1) {
 				this.tags.splice(index, 1);
 			}
+		},
+		addTag: function(t) {
+			// Send a message to taskList component via bus events:
+			bus.$emit('addTag', t);
+		},
+		addColour: function(c) {
+			// Send a message to taskList component via bus events:
+			bus.$emit('addColour', c);
 		}
 	}
 });
@@ -206,6 +226,8 @@ var exampleTasks = [
 	{ id: 1, body: 'Buy 5 gallons of milk', completed: false, tags: ['5min'], colours: ['blue'] },
 	{ id: 2, body: 'Finish programming app', completed: false, tags: ['2h+'], colours: ['orange', 'green'] }
 ];
+
+var bus = new Vue();
 
 var vm = new Vue({
 	config: {
@@ -220,14 +242,14 @@ var vm = new Vue({
 	},
 
 	ready: function() {
-		// load state when app loads:
+		// Load state when app loads:
 		if (localStorage.taskAppData) {
 			this.loadAll();
 		}
 	},
 
 	watch: {
-		// save state whenever data.tasks changes:
+		// Save state whenever data.tasks changes:
 		tasks: {
 			handler: function(newData, oldData) {
 				this.saveAll();
@@ -250,8 +272,8 @@ var vm = new Vue({
 
 
 // Sortable.js
-var list = document.getElementById("task-ul");
-Sortable.create(list, {
+var taskListElement = document.getElementById("task-ul");
+Sortable.create(taskListElement, {
 	// Reposition the dragged list item within the original data array:
 	onSort: function(evt) {
 		console.log(evt.oldIndex + ' > ' + evt.newIndex);
@@ -264,21 +286,14 @@ Sortable.create(list, {
 
 // KeyCodes:
 // Move up:
-Mousetrap.bind('up', function() { vm.$refs.task-list.selectUp(); });	// OK
+Mousetrap.bind('up', function() { vm.$refs.tasklist.selectUp(); });	// OK
 // Move down:
-Mousetrap.bind('down', function() { vm.$refs.task-list.selectDown(); });	// OK
+Mousetrap.bind('down', function() { vm.$refs.tasklist.selectDown(); });	// OK
 // Enter = toggle editing selected task:
-Mousetrap.bind('enter', function() { vm.$refs.task-list.editTask(vm.$refs.task-list.selectedId); });		// OK
+Mousetrap.bind('enter', function() { vm.$refs.tasklist.editTask(vm.$refs.tasklist.selectedId); });		// OK
 // x = toggle completed:
-Mousetrap.bind('x', function() { vm.$refs.task-list.toggleCompleted(vm.$refs.task-list.selectedId); });	// OK
+Mousetrap.bind('x', function() { vm.$refs.tasklist.toggleCompleted(vm.$refs.tasklist.selectedId); });	// OK
 // T = trash selected task:
-Mousetrap.bind('T', function() { vm.$refs.task-list.deleteTask(vm.$refs.task-list.selectedId); });	// OK
+Mousetrap.bind('T', function() { vm.$refs.tasklist.deleteTask(vm.$refs.tasklist.selectedId); });	// OK
 // n = new task:
-Mousetrap.bind('n', function() { vm.$refs.task-list.newTask(); });	// OK
-
-/*/ 1-9 = tags
-var j;
-for (j = 1; j <= 7; j++) {
-	Mousetrap.bind(j, function() { vc.addTag(tags[j-1]); });	// exists
-}
-*/
+Mousetrap.bind('n', function() { vm.$refs.tasklist.newTask(); });	// OK
