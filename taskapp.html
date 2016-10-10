@@ -31,7 +31,7 @@
 
 		<ul id="task-ul" v-show="list.length > 0">
 			<li class="list-item flex-container"
-				v-for="(index, task) in list | filterBy search"
+				v-for="(index, task) in filteredTasks"
 				data-id="{{ index }}"
 				v-bind:class="{completed: task.completed, selected: task.id == selectedId}"
 				v-on:click="select(task.id)">
@@ -47,11 +47,11 @@
 
 				<div class="group">
 					<!-- Colours: -->
-					<span v-for="(i, c) in task.colours | filterBy search"
+					<span v-for="(i, c) in task.colours"
 						  class="colour" v-bind:class="c" v-on:click="deleteColour(task.id, c)">
 					</span>
 					<!-- Tags: -->
-					<span v-for="(i, t) in task.tags | filterBy search"
+					<span v-for="(i, t) in task.tags"
 					  	  class="tag" v-on:click="deleteTag(task.id, t)">
 						  {{ t }}
 					</span>

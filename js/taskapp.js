@@ -43,6 +43,14 @@ var vueListComponent = Vue.component('taskList' , {
 				}
 			}
 			return max + 1;
+		},
+
+		filteredTasks: function() {
+			return this.list.filter(function(task) {
+  				var searchRegex = new RegExp(this.search, 'i');
+				// Include if search term matches body or colours array:
+				return searchRegex.test(task.body) || searchRegex.test(task.colours.toString());
+			}.bind(this));
 		}
 	},
 
