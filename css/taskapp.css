@@ -205,6 +205,13 @@ button {
 button:hover {
 	background: #61aaff;
 }
+#task-buttons i {
+	border: 0;
+	background: #5696e0;
+	color: white;
+	border-radius: 8px;
+	padding: 6px 8px;
+}
 
 
  /*

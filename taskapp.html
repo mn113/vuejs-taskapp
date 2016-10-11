@@ -14,7 +14,7 @@
 </head>
 <body>
 	<div id="app">
-		<task-list v-ref:taskList v-bind:list="tasks"></task-list>
+		<task-list v-ref:taskList v-bind:list="tasks" v-bind:trash="trash"></task-list>
 		<div id="sidebar">
 			<task-ui v-ref:taskUi v-bind:tags="tags" v-bind:colours="colours"></task-ui>
 			<section id="info">
@@ -41,14 +41,13 @@
 				</p>
 			</section>
 		</div>
-		<!--p>SelectedId: {{ $refs.tasklist.selectedId }}<br>EditingId: {{ $refs.tasklist.editingId }}</p>
-		<p> {{ $refs.taskui.tags | json }}</p-->
+		<!--p>SelectedId: {{ $refs.tasklist.selectedId }}<br>EditingId: {{ $refs.tasklist.editingId }}</p-->
 	</div>
 	<!-- end of Vue app container -->
 
 	<!-- First component template -->
 	<template id="task-list-tpl">
-	<section v-on:click="selectedId = null">
+	<section v-on:click="">
 		<h1>My Tasks <span class="subhead">({{ remaining }} remaining)</span></h1>
 
 		<span>Filter:</span>
@@ -101,14 +100,18 @@
 			<form id="task-buttons">
 				<button v-on:click.prevent="newTask" v-on:keyup.n="newTask">Add Task</button>
 				<button v-show="list.length > 0" v-on:click.prevent="clearCompleted">Clear Completed</button>
+				<i class="fa fa-trash" aria-hidden="true" v-on:click="unTrashLast"></i>
 			</form>
 		</div>
+		<p>{{ trash | json }}</p>
+
 	</section>
 	</template>
 
 	<!-- Second component template -->
 	<template id="ui-tpl">
 	<section>
+		<h3>Toolbox</h3>
 		<div id="tag-list" v-bind:class="{editing: editingTags}">
 			<p>Tags:
 				<span class="editBtn" v-on:click="toggleEditingGlobalTags">

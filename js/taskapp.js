@@ -2,9 +2,8 @@
 var vueListComponent = Vue.component('taskList' , {
 	template: "#task-list-tpl",
 	props: {
-		list: {				// template binding: list = root.tasks
-			type: Array
-		},
+		list: Array,				// template binding: list = root.tasks
+		trash: Array,
 		search: {
 			type: String,
 			default: ''
@@ -15,8 +14,7 @@ var vueListComponent = Vue.component('taskList' , {
 		return {
 			addFormVisible: false,
 			selectedId: null,
-			editingId: null,
-			trash: []
+			editingId: null
 		};
 	},
 
@@ -62,30 +60,48 @@ var vueListComponent = Vue.component('taskList' , {
 	watch: {
 		selectedId: function() {
 			console.log('item with task.id', this.selectedId, 'selected');
+		},
+		// Save app state when trash array changes:
+		trash: function() {
+
 		}
 	},
 
 	methods: {
 		toggleCompleted: function(taskId) {
 			// Find referenced task by id:
-			var task = this.list[this.findSelectedTask()];
+			var task = this.list[this.findSelectedRow()];
 			task.completed = !task.completed;
-		},
-		isCompleted: function(task) {
-			return task.completed;
 		},
 		notCompleted: function(task) {
 			return !task.completed;
 		},
 		deleteTask: function(taskId) {
 			// Find referenced task by id:
-			var task = this.list[this.findSelectedTask()];
+			var task = this.list[this.findSelectedRow(taskId)];
 			var index = this.list.indexOf(task);
-			this.list.splice(index, 1);
+			if (index !== -1) {
+				var trashed = this.list.splice(index, 1);
+				// Add to trash:
+				this.trash.push(trashed[0]);
+			}
 		},
 		clearCompleted: function() {
-			// Set list as only our incomplete tasks (others will simply vanish)
+			// Add task to trash:
+			var i;
+			for (i = 0; i < this.list.length; i++) {
+				if (this.list[i].completed) {
+					this.trash.push(this.list[i]);
+				}
+			}
+			// Set list as only our incomplete tasks:
 			this.list = this.list.filter(this.notCompleted);
+		},
+		unTrashLast: function() {
+			if (this.trash.length > 0) {
+				var item = this.trash.pop();
+				this.list.push(item);
+			}
 		},
 		editTask: function(taskId) {
 			// Finish editing if already editing:
@@ -100,42 +116,48 @@ var vueListComponent = Vue.component('taskList' , {
 		select: function(taskId) {	// COMBINE TWO FUNCTIONS?
 			this.selectedId = taskId;
 		},
-		setSelectedTask: function(index) {
+		setSelectedRow: function(index) {
 			this.selectedId = this.list[index].id;
 		},
-		findSelectedTask: function() {
-			var position = null;
-			// Check an item is selected:
-			if (this.selectedId) {
-				var selId = this.selectedId;
-				// Find it by id within the task list:
-				position = this.list.findIndex(function(element) {
-					return (element.id == selId);
-				});
+		findSelectedRow: function(taskId = null) {
+			var rowId = null;
+			// Argument passed:
+			if (taskId !== null) {
+				rowId = taskId;
 			}
-			return position;
+			// Check an item is selected:
+			else if (this.selectedId !== null) {
+				rowId = this.selectedId;
+			}
+			else {
+				return null;
+			}
+			// Find it by id within the task list:
+			return this.list.findIndex(function(element) {
+				return (element.id == rowId);
+			});
 		},
 		selectUp: function() {
 			// Get list index from selectedId:
-			var selectedPos = this.findSelectedTask();
+			var selectedPos = this.findSelectedRow();
 			if (selectedPos > 0) {
 				selectedPos--;
 			}
 			// Set selectedId to new list index:
-			this.setSelectedTask(selectedPos);
+			this.setSelectedRow(selectedPos);
 		},
 		selectDown: function() {
 			// Get list index from selectedId:
-			var selectedPos = this.findSelectedTask();
+			var selectedPos = this.findSelectedRow();
 			if (selectedPos < this.list.length - 1) {
 				selectedPos++;
 			}
 			// Set selectedId to new list index:
-			this.setSelectedTask(selectedPos);
+			this.setSelectedRow(selectedPos);
 		},
 		addTag: function(tag) {
 			// Where to add it?
-			var position = this.findSelectedTask();
+			var position = this.findSelectedRow();
 			if (position >= 0) {
 				// Check tag doesn't exist on item:
 				if (this.list[position].tags.indexOf(tag) === -1) {
@@ -146,7 +168,7 @@ var vueListComponent = Vue.component('taskList' , {
 		},
 		addColour: function(colour) {
 			// Where to add it?
-			var position = this.findSelectedTask();
+			var position = this.findSelectedRow();
 			if (position >= 0) {
 				if (this.list[position].colours.indexOf(colour) === -1) {
 					// Update tags data:
@@ -154,20 +176,20 @@ var vueListComponent = Vue.component('taskList' , {
 				}
 			}
 		},
-		deleteTag: function(tid, tag) {
+		deleteTag: function(taskId, tag) {
 			// Where to delete it?
 			var position = this.list.findIndex(function(element) {
-				return (element.id == tid);
+				return (element.id == taskId);
 			});
 			if (position >= 0) {
 				var i = this.list[position].tags.indexOf(tag);
 				this.list[position].tags.splice(i, 1);
 			}
 		},
-		deleteColour: function(tid, colour) {
+		deleteColour: function(taskId, colour) {
 			// Where to delete it?
 			var position = this.list.findIndex(function(element) {
-				return (element.id == tid);
+				return (element.id == taskId);
 			});
 			if (position >= 0) {
 				var i = this.list[position].colours.indexOf(colour);
@@ -255,13 +277,14 @@ var vm = new Vue({
 
 	data: {
 		tasks: exampleTasks,
+		trash: [],
 		tags: ['5min', '15min', '30min', '45min', '1h', '1.5h', '2h+'],
 		colours: ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink']
 	},
 
 	ready: function() {
 		// Load state when app loads:
-		if (localStorage.taskAppData) {
+		if (localStorage.getItem('taskAppData.tasks')) {
 			this.loadAll();
 		}
 	},
@@ -273,17 +296,25 @@ var vm = new Vue({
 				this.saveAll();
 			},
 			deep: true
+		},
+		// Save state whenever data.tags changes:
+		tags: {
+			handler: function(newData, oldData) {
+				this.saveAll();
+			}
 		}
 	},
 
 	methods: {
-		saveAll: function() {
-			localStorage.setItem('taskAppData', JSON.stringify(this.tasks));
-			console.info('Data saved.');
-		},
 		loadAll: function() {
-			this.tasks = JSON.parse(localStorage.getItem('taskAppData'));
+			this.tasks = JSON.parse(localStorage.getItem('taskAppData.tasks'));
+			this.tags = JSON.parse(localStorage.getItem('taskAppData.tags'));
 			console.info('Data loaded.');
+		},
+		saveAll: function() {
+			localStorage.setItem('taskAppData.tasks', JSON.stringify(this.tasks));
+			localStorage.setItem('taskAppData.tags', JSON.stringify(this.tags));
+			console.info('Data saved.');
 		}
 	}
 });
@@ -296,8 +327,8 @@ Sortable.create(taskListElement, {
 	onSort: function(evt) {
 		console.log(evt.oldIndex + ' > ' + evt.newIndex);
 		// Switcharoo:
-		var moved = vm.$refs.task-list.list.splice(evt.oldIndex, 1);
-		vm.$refs.task-list.list.splice(evt.newIndex, 0, moved[0]);
+		var moved = vm.$refs.tasklist.list.splice(evt.oldIndex, 1);
+		vm.$refs.tasklist.list.splice(evt.newIndex, 0, moved[0]);
 	}
 });
 
@@ -313,5 +344,7 @@ Mousetrap.bind('enter', function() { vm.$refs.tasklist.editTask(vm.$refs.tasklis
 Mousetrap.bind('x', function() { vm.$refs.tasklist.toggleCompleted(vm.$refs.tasklist.selectedId); });	// OK
 // T = trash selected task:
 Mousetrap.bind('T', function() { vm.$refs.tasklist.deleteTask(vm.$refs.tasklist.selectedId); });	// OK
+// U = untrash last trashed task:
+Mousetrap.bind('U', function() { vm.$refs.tasklist.unTrashLast(); });	// OK
 // n = new task:
 Mousetrap.bind('n', function() { vm.$refs.tasklist.newTask(); });	// OK
