@@ -8,20 +8,48 @@
 	<title>Vue Task App</title>
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/taskapp.css">
+	<!--[if lte IE 9]><Flexbox polyfill>
+	<script src="js/flexibility.js"></script>
+	<![endif]-->
 </head>
 <body>
 	<div id="app">
 		<task-list v-ref:taskList v-bind:list="tasks"></task-list>
-		<task-ui v-ref:taskUi v-bind:tags="tags" v-bind:colours="colours"></task-ui>
-		<p>SelectedId: {{ $refs.tasklist.selectedId }}<br>EditingId: {{ $refs.tasklist.editingId }}</p>
-		<p> {{ $refs.taskui.tags | json }}</p>
-		<p> {{ $data | json }}</p>
+		<div id="sidebar">
+			<task-ui v-ref:taskUi v-bind:tags="tags" v-bind:colours="colours"></task-ui>
+			<section id="info">
+				<h3>About</h3>
+				<p>A modern, browser-based Task List / To-Do List app with just enough features to enhance your productivity and organise your focus, without being slow or bloated.</p>
+				<h3>My Tasks Will Go On</h3>
+				<p>The app state is autosaved to the browser session, so no worries about saving, closing or shutting down.</p>
+				<h3>Hotkeys</h3>
+				<dl>
+					<dt>n</dt><dd>New task</dd>
+					<dt>x</dt><dd>Mark task completed</dd>
+					<dt>T</dt><dd>Trash task</dd>
+					<dt>&#8593;,&#8595;</dt><dd>Navigate list</dd>
+					<p>Re-order tasks by dragging and dropping.<br>
+					Add and remove tags by clicking them.</p>
+				</dl>
+				<h3>Made With</h3>
+				<img src="img/logo_html5.png" alt="HTML5" height="40">
+				<img src="img/logo_css3.png" alt="CSS3" height="40">
+				<img src="img/logo_vuejs.png" alt="Vue.js">
+				<img src="img/logo_fontawesome.jpg" alt="Font Awesome">
+				<p>
+					<a href="https://github.com/mn113/vuejs-taskapp">github.com/mn113/vuejs-taskapp</a>
+				</p>
+			</section>
+		</div>
+		<!--p>SelectedId: {{ $refs.tasklist.selectedId }}<br>EditingId: {{ $refs.tasklist.editingId }}</p>
+		<p> {{ $refs.taskui.tags | json }}</p-->
 	</div>
 	<!-- end of Vue app container -->
 
 	<!-- First component template -->
-	<template id="task-list-tpl" v-on:click="selectedId = null">
-		<h1>My Tasks ({{ remaining }})</h1>
+	<template id="task-list-tpl">
+	<section v-on:click="selectedId = null">
+		<h1>My Tasks <span class="subhead">({{ remaining }} remaining)</span></h1>
 
 		<span>Filter:</span>
 		<form id="filter" v-bind:search="search">
@@ -46,37 +74,41 @@
 				</div>
 
 				<div class="group">
-					<!-- Colours: -->
-					<span v-for="(i, c) in task.colours"
-						  class="colour" v-bind:class="c" v-on:click="deleteColour(task.id, c)">
-					</span>
-					<!-- Tags: -->
-					<span v-for="(i, t) in task.tags"
-					  	  class="tag" v-on:click="deleteTag(task.id, t)">
-						  {{ t }}
-					</span>
-				</div>
-				<div class="group">
-					<!-- Task actions: -->
-					<span class="editBtn" v-on:click="editTask(task.id)">
-						{{ editingId == task.id ? 'Save' : 'Edit' }}
-					</span>
-					<i class="fa fa-trash-o" aria-hidden="true" v-on:click="deleteTask(task.id)"></i>
+					<div class="group_inner">
+						<!-- Tags: -->
+						<span v-for="(i, t) in task.tags"
+						  	  class="tag" v-on:click="deleteTag(task.id, t)">
+							  {{ t }}
+						</span>
+						<!-- Colours: -->
+						<span v-for="(i, c) in task.colours"
+							  class="colour" v-bind:class="c" v-on:click="deleteColour(task.id, c)">
+						</span>
+					</div>
+					<div class="group_inner">
+						<!-- Task actions: -->
+						<span class="editBtn" v-on:click="editTask(task.id)">
+							{{ editingId == task.id ? 'Save' : 'Edit' }}
+						</span>
+						<i class="fa fa-trash-o" aria-hidden="true" v-on:click="deleteTask(task.id)"></i>
+					</div>
 				</div>
 			</li>
 		</ul>
 		<p v-else>No tasks here.</p>
 
-		<div>
+		<div class="cf">
 			<form id="task-buttons">
 				<button v-on:click.prevent="newTask" v-on:keyup.n="newTask">Add Task</button>
 				<button v-show="list.length > 0" v-on:click.prevent="clearCompleted">Clear Completed</button>
 			</form>
 		</div>
+	</section>
 	</template>
 
 	<!-- Second component template -->
 	<template id="ui-tpl">
+	<section>
 		<div id="tag-list" v-bind:class="{editing: editingTags}">
 			<p>Tags:
 				<span class="editBtn" v-on:click="toggleEditingGlobalTags">
@@ -105,6 +137,7 @@
 				  v-on:click="addColour(c)">
 			</span>
 		</div>
+	</section>
 	</template>
 
 

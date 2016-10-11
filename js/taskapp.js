@@ -1,14 +1,19 @@
 /*global Vue, Sortable */
 var vueListComponent = Vue.component('taskList' , {
 	template: "#task-list-tpl",
-	props: [
-		'list'				// template binding: list = root.tasks
-	],
+	props: {
+		list: {				// template binding: list = root.tasks
+			type: Array
+		},
+		search: {
+			type: String,
+			default: ''
+		}
+	},
 
 	data: function() {
 		return {
 			addFormVisible: false,
-			search: '',
 			selectedId: null,
 			editingId: null,
 			trash: []
@@ -154,7 +159,7 @@ var vueListComponent = Vue.component('taskList' , {
 			var position = this.list.findIndex(function(element) {
 				return (element.id == tid);
 			});
-			if (position) {
+			if (position >= 0) {
 				var i = this.list[position].tags.indexOf(tag);
 				this.list[position].tags.splice(i, 1);
 			}
@@ -164,7 +169,7 @@ var vueListComponent = Vue.component('taskList' , {
 			var position = this.list.findIndex(function(element) {
 				return (element.id == tid);
 			});
-			if (position) {
+			if (position >= 0) {
 				var i = this.list[position].colours.indexOf(colour);
 				this.list[position].colours.splice(i, 1);
 			}
@@ -191,16 +196,21 @@ var vueListComponent = Vue.component('taskList' , {
 
 var vueUIComponent = Vue.component('taskUi' , {
 	template: "#ui-tpl",
-	props: [
-		'tags',
-		'colours'
-	],
+	props: {
+		tags: Array,
+		colours: Array,
+		newTag: {
+			type: String,
+			default: ''
+		}
+	},
+
 	data: function() {
 		return {
-			editingTags: false,
-			newTag: ''
+			editingTags: false
 		};
 	},
+
 	methods: {
 		toggleEditingGlobalTags: function() {
 			// Simply to show/hide editing area
