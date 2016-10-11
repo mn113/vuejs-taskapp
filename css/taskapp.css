@@ -65,6 +65,7 @@ body {
 	   	display: -moz-box;
 	   	display: -ms-flexbox;
 	   	display: -webkit-flex;
+		-js-display: flex;
 	   	display: flex;
 	   	flex-direction: row;
 	   	flex-wrap: nowrap;
@@ -75,6 +76,7 @@ body {
 		display: -moz-box;
 		display: -ms-flexbox;
 		display: -webkit-flex;
+		-js-display: flex;
 		display: flex;
 		flex-direction: column;
 		flex-wrap: nowrap;
@@ -144,6 +146,7 @@ li.list-item input[type=checkbox] {
 	display: -moz-box;
 	display: -ms-flexbox;
 	display: -webkit-flex;
+	-js-display: flex;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
@@ -154,6 +157,7 @@ li.list-item input[type=checkbox] {
 	display: -moz-box;
 	display: -ms-flexbox;
 	display: -webkit-flex;
+	-js-display: flex;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -167,6 +171,7 @@ li.list-item input[type=checkbox] {
 	display: -moz-box;
 	display: -ms-flexbox;
 	display: -webkit-flex;
+	-js-display: flex;
 	display: flex;
 	flex-direction: row;
 	flex-basis: 50%;
@@ -181,6 +186,7 @@ li.list-item input[type=checkbox] {
 	display: -moz-box;
 	display: -ms-flexbox;
 	display: -webkit-flex;
+	-js-display: flex;
 	display: flex;
 	flex-direction: row;
 	flex-basis: 3.3em;
@@ -189,8 +195,28 @@ li.list-item input[type=checkbox] {
 
 
 /*
- * BUTTONS
- */
+* TASK ACTIONS
+*/
+.editBtn {
+	color: #666;
+	padding: 0 0.8em;
+	font-size: 0.8em;
+}
+.editBtn:hover {
+	cursor: pointer;
+	color: cadetblue;
+}
+.completed .editBtn {
+	display: none;
+}
+.fa:hover {
+	cursor: pointer;
+}
+
+
+/*
+* BUTTONS
+*/
 #task-buttons {
 	float: right;
 }
@@ -206,35 +232,19 @@ button:hover {
 	background: #61aaff;
 }
 #task-buttons i {
-	border: 0;
-	background: #5696e0;
-	color: white;
-	border-radius: 8px;
-	padding: 6px 8px;
+ 	border: 0;
+ 	background: #999;
+ 	color: white;
+ 	border-radius: 8px;
+ 	padding: 6px 8px;
 }
+#task-buttons i.active {
+	background: #5696e0;
 
-
- /*
-  * TASK ACTIONS
-  */
- .editBtn {
- 	color: #666;
- 	padding: 0 0.8em;
- 	font-size: 0.8em;
- }
- .editBtn:hover {
- 	cursor: pointer;
- 	color: cadetblue;
- }
- .completed .editBtn {
- 	display: none;
- }
- .fa:hover {
- 	cursor: pointer;
- }
- .fa-trash-o {
- 	xfloat: right;
- }
+}
+#task-buttons i.active:hover {
+	 background: #61aaff;
+}
 
 
 /*
@@ -283,6 +293,10 @@ button:hover {
 #tag-list p, #colour-list p {
 	margin: 0 0 0.4em 0;
 }
+#tag-list .tag:hover,
+#colour-list .colour:hover {
+	cursor: url(../img/add-cursor.png), crosshair;
+}
 #tag-list .editBtn {
 	float: right;
 }
@@ -297,6 +311,7 @@ button:hover {
 	justify-content: space-between;
 }
 #tag-list.editing > div > span {
+	-js-display: flex;
 	display: flex;
 	margin-bottom: 4px;
 	justify-content: flex-start;
@@ -374,4 +389,22 @@ dd {
 }
 #info p {
 	clear: both;
+}
+p abbr {
+	font-size: 0.8em;
+	color: #5696e0;
+	border-bottom: 1px dotted #5696e0;
+	cursor: pointer
+}
+
+
+/*
+ * Tooltip.js styles
+ */
+ #tooltip {
+	position:absolute;
+	background:rgba(86, 150, 224, 0.7);
+	color: white;
+	font-size: 0.8rem;
+	padding:6px;
 }

@@ -5,18 +5,21 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Vue Task App</title>
+	<title>TaskApp</title>
+	<link rel="icon" type="image/x-icon" href="img/favicon.ico">
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/taskapp.css">
-	<!--[if lte IE 9]><Flexbox polyfill>
+	<!--[if lte IE 10]><Flexbox polyfill>
 	<script src="js/flexibility.js"></script>
+	<script type="text/javascript">flexibility(document.getElementById("app"));</script>
 	<![endif]-->
 </head>
 <body>
+	<!-- start of Vue app container -->
 	<div id="app">
-		<task-list v-ref:taskList v-bind:list="tasks" v-bind:trash="trash"></task-list>
+		<task-list v-ref:taskList v-bind:list.sync="tasks" v-bind:trash.sync="trash"></task-list>
 		<div id="sidebar">
-			<task-ui v-ref:taskUi v-bind:tags="tags" v-bind:colours="colours"></task-ui>
+			<task-ui v-ref:taskUi v-bind:tags.sync="tags" v-bind:colours="colours"></task-ui>
 			<section id="info">
 				<h3>About</h3>
 				<p>A modern, browser-based Task List / To-Do List app with just enough features to enhance your productivity and organise your focus, without being slow or bloated.</p>
@@ -24,10 +27,12 @@
 				<p>The app state is autosaved to the browser session, so no worries about saving, closing or shutting down.</p>
 				<h3>Hotkeys</h3>
 				<dl>
-					<dt>n</dt><dd>New task</dd>
-					<dt>x</dt><dd>Mark task completed</dd>
-					<dt>T</dt><dd>Trash task</dd>
 					<dt>&#8593;,&#8595;</dt><dd>Navigate list</dd>
+					<dt>&#8629;</dt><dd>Edit/Save task</dd>
+					<dt>x</dt><dd>Mark task completed</dd>
+					<dt>n</dt><dd>New task</dd>
+					<dt>D</dt><dd>Delete task</dd>
+					<dt>U</dt><dd>Undelete task</dd>
 					<p>Re-order tasks by dragging and dropping.<br>
 					Add and remove tags by clicking them.</p>
 				</dl>
@@ -41,14 +46,13 @@
 				</p>
 			</section>
 		</div>
-		<!--p>SelectedId: {{ $refs.tasklist.selectedId }}<br>EditingId: {{ $refs.tasklist.editingId }}</p-->
 	</div>
 	<!-- end of Vue app container -->
 
 	<!-- First component template -->
 	<template id="task-list-tpl">
-	<section v-on:click="">
-		<h1>My Tasks <span class="subhead">({{ remaining }} remaining)</span></h1>
+	<section>
+		<h1 data-tooltip title="My tasks">My Tasks <span class="subhead">({{ remaining }} remaining)</span></h1>
 
 		<span>Filter:</span>
 		<form id="filter" v-bind:search="search">
@@ -56,7 +60,7 @@
 			<i class="fa fa-times-circle" aria-hidden="true" v-on:click="search = ''"></i>
 		</form>
 
-		<ul id="task-ul" v-show="list.length > 0">
+		<ul id="task-ul" v-show="filteredTasks.length > 0">
 			<li class="list-item flex-container"
 				v-for="(index, task) in filteredTasks"
 				data-id="{{ index }}"
@@ -100,11 +104,13 @@
 			<form id="task-buttons">
 				<button v-on:click.prevent="newTask" v-on:keyup.n="newTask">Add Task</button>
 				<button v-show="list.length > 0" v-on:click.prevent="clearCompleted">Clear Completed</button>
-				<i class="fa fa-trash" aria-hidden="true" v-on:click="unTrashLast"></i>
+				<i class="fa fa-trash" v-bind:class="{active: trash.length > 0}" v-on:click="unTrashLast"
+				data-tooltip="{'offset':10}" title="Undelete tasks" aria-hidden="true" ></i>
 			</form>
 		</div>
-		<p>{{ trash | json }}</p>
-
+		<!--p style="color:green">{{ list | json }}</p>
+		<hr />
+		<p style="color:red">{{ trash | json }}</p-->
 	</section>
 	</template>
 
@@ -140,6 +146,11 @@
 				  v-on:click="addColour(c)">
 			</span>
 		</div>
+
+		<p> Export tasks as
+			<abbr v-on:click="exportTasks('csv')">CSV</abbr>
+			<abbr v-on:click="exportTasks('json')">JSON</abbr>
+		</p>
 	</section>
 	</template>
 
@@ -150,6 +161,7 @@
 	<script src="js/vue.1.0.28.js"></script>
 	<script src="js/Sortable.js"></script>
 	<script src="js/taskapp.js"></script>
-	<script src="https://use.fontawesome.com/bfab10ea54.js"></script>
+	<script src="js/fontawesome_bfab10ea54.js"></script>
+	<script src="js/Tooltip.js"></script>
 </body>
 </html>

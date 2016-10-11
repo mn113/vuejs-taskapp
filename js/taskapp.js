@@ -60,10 +60,6 @@ var vueListComponent = Vue.component('taskList' , {
 	watch: {
 		selectedId: function() {
 			console.log('item with task.id', this.selectedId, 'selected');
-		},
-		// Save app state when trash array changes:
-		trash: function() {
-
 		}
 	},
 
@@ -96,6 +92,8 @@ var vueListComponent = Vue.component('taskList' , {
 			}
 			// Set list as only our incomplete tasks:
 			this.list = this.list.filter(this.notCompleted);
+			// Not sure why this save hack is needed, but Vue doesn't seem to see change on this.tasks:
+//			bus.$emit('saveAll');
 		},
 		unTrashLast: function() {
 			if (this.trash.length > 0) {
@@ -257,6 +255,10 @@ var vueUIComponent = Vue.component('taskUi' , {
 		addColour: function(c) {
 			// Send a message to taskList component via bus events:
 			bus.$emit('addColour', c);
+		},
+		exportTasks: function(format) {
+			// Send a message to root component via bus events:
+			bus.$emit('exportTasks', format);
 		}
 	}
 });
@@ -276,22 +278,41 @@ var vm = new Vue({
 	el: "#app",
 
 	data: {
+		// User-changeable:
 		tasks: exampleTasks,
 		trash: [],
 		tags: ['5min', '15min', '30min', '45min', '1h', '1.5h', '2h+'],
+		// Immutable:
 		colours: ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink']
 	},
 
 	ready: function() {
 		// Load state when app loads:
-		if (localStorage.getItem('taskAppData.tasks')) {
+		if (localStorage.getItem('tasks')) {
 			this.loadAll();
 		}
+
+		// Listen for message from the events bus:
+		bus.$on('exportTasks', function(format) {
+			this.exportTasks(format);
+		}.bind(this));
+
+		// Listen for message from the events bus:
+		bus.$on('saveAll', function() {
+			this.saveAll();
+		}.bind(this));
 	},
 
 	watch: {
 		// Save state whenever data.tasks changes:
 		tasks: {
+			handler: function(newData, oldData) {
+				this.saveAll();
+			},
+			deep: true
+		},
+		// Save state whenever data.trash changes:
+		trash: {
 			handler: function(newData, oldData) {
 				this.saveAll();
 			},
@@ -307,14 +328,37 @@ var vm = new Vue({
 
 	methods: {
 		loadAll: function() {
-			this.tasks = JSON.parse(localStorage.getItem('taskAppData.tasks'));
-			this.tags = JSON.parse(localStorage.getItem('taskAppData.tags'));
+			this.tasks = JSON.parse(localStorage.getItem('tasks'));
+			this.trash = JSON.parse(localStorage.getItem('trash'));
+			if (localStorage.getItem('tags').length > 0) {
+				this.tags = JSON.parse(localStorage.getItem('tags'));	// else: keep default tags
+			}
 			console.info('Data loaded.');
 		},
 		saveAll: function() {
-			localStorage.setItem('taskAppData.tasks', JSON.stringify(this.tasks));
-			localStorage.setItem('taskAppData.tags', JSON.stringify(this.tags));
+			localStorage.setItem('tasks', JSON.stringify(this.tasks));
+			localStorage.setItem('trash', JSON.stringify(this.trash));
+			localStorage.setItem('tags', JSON.stringify(this.tags));
 			console.info('Data saved.');
+		},
+		exportTasks: function(format) {
+			if (format == 'csv') {
+				var csvContent = "data:text/csv;charset=utf-8,";
+				for (var i in this.tasks) {
+					var task = this.tasks[i];
+   					csvContent += task.body + ',' + task.completed.toString() + ',' + task.tags.toString() + ',' + task.colours.toString() + "\n";
+				};
+				// Use JavaScript's window.open and encodeURI functions to download the CSV file:
+				var encodedUri = encodeURI(csvContent);
+				window.open(encodedUri);
+			}
+			else if (format == 'json') {
+				var jsonContent = "data:text/json;charset=utf-8,";
+				jsonContent += JSON.stringify(this.tasks);
+				// Use JavaScript's window.open and encodeURI functions to download the CSV file:
+				var encodedUri = encodeURI(jsonContent);
+				window.open(encodedUri);
+			}
 		}
 	}
 });
@@ -343,8 +387,14 @@ Mousetrap.bind('enter', function() { vm.$refs.tasklist.editTask(vm.$refs.tasklis
 // x = toggle completed:
 Mousetrap.bind('x', function() { vm.$refs.tasklist.toggleCompleted(vm.$refs.tasklist.selectedId); });	// OK
 // T = trash selected task:
-Mousetrap.bind('T', function() { vm.$refs.tasklist.deleteTask(vm.$refs.tasklist.selectedId); });	// OK
+Mousetrap.bind('D', function() { vm.$refs.tasklist.deleteTask(vm.$refs.tasklist.selectedId); });	// OK
 // U = untrash last trashed task:
 Mousetrap.bind('U', function() { vm.$refs.tasklist.unTrashLast(); });	// OK
 // n = new task:
 Mousetrap.bind('n', function() { vm.$refs.tasklist.newTask(); });	// OK
+
+
+// Save state before close or reload:
+window.addEventListener("beforeunload", function(e){
+	bus.$emit('saveAll');
+}, false);
