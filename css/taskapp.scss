@@ -12,10 +12,10 @@ html, body {
 	height: 100%;
 }
 body {
-	font-size: 100%;
-	line-height: 1.2rem;
+	font-size: 1rem;
+    line-height: 1.4rem;
 	color: #111;
-	background: #ccc url(../img/sayagata-80px.png) repeat;
+	background: #79b url(../img/sayagata-80px-blue.png) repeat;
 	font-family: "Century Gothic", "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 /* clearfix (latest & greatest) */
@@ -133,11 +133,7 @@ h3 {
 		width: 95%;
 	}
 
-	.clear-button {
-		@extend %icon;
-		width: 15px;
-		height: 15px;
-		background-position: 0 -33px;
+	.icon-clear {
 		position: absolute;
 		top: 6px;
 		right: 6px;
@@ -192,7 +188,7 @@ li.selected {
 			justify-content: flex-start;
 		}
 		&:last-child {
-			@include flexbox(row, wrap);
+			@include flexbox(row, nowrap);
 			flex-basis: 50%;
 			justify-content: flex-end;
 		}
@@ -203,7 +199,7 @@ li.selected {
 		justify-content: flex-end;
 
 		&:first-child {
-			@include flexbox(row, nowrap);
+			@include flexbox(row, wrap);
 			align-items: center;
 		}
 		&:last-child {
@@ -211,6 +207,9 @@ li.selected {
 			flex-basis: 3.3em;
 		}
 	}
+}
+.icon-trash {
+
 }
 
 
@@ -230,47 +229,38 @@ li.selected {
 .completed .edit-btn {
 	display: none;
 }
-.fa:hover {
-	cursor: pointer;
-}
-%icon {
-	background: url(../img/spritesheet.png);
-	cursor: pointer;
-}
-.trash-button {
-	@extend %icon;
-	width: 15px;
-	height: 15px;
-	background-position: 0 0;
+svg {
+	width: 1em;
+	height: 1em;
+
+	&:hover {
+		cursor: pointer;
+	}
 }
 
 
 /*
 * BUTTONS
 */
-#task-buttons {
-	float: right;
-
-	.untrash-button {
-		@extend %icon;
-		display: inline-block;
-		margin: 0 0 -2px;
-		padding: 0;
-		width: 15px;
-		height: 17px;
-		background-position: 0 -15px;
-	}
-}
 button {
 	border: 0;
 	background-color: $primary-color;
 	color: white;
 	border-radius: 8px;
 	font-size: 0.8rem;
-	padding: 2px 4px;
+	padding: 3px 6px;
 
 	&:hover {
 		background-color: lighten($primary-color, 10%);	//#61aaff;;
+	}
+}
+#task-buttons {
+	float: right;
+
+	.icon-untrash {
+		padding: 0 2px 0 3px;
+		margin-bottom: -2px;
+		font-size: 1rem;
 	}
 }
 
@@ -357,7 +347,8 @@ button {
 		align-items: center;
 
 		.tag {
-			flex-basis: 8em;
+			flex-basis: 5em;
+			justify-content: center;
 			margin-right: 1em;
 			margin-bottom: 0;
 		}
@@ -383,6 +374,12 @@ dd {
 	p {
 		clear: both;
 	}
+	abbr {
+		font-size: 0.8em;
+		color: $primary-color;
+		border-bottom: 1px dotted $primary-color;
+		cursor: pointer;
+	}
 }
 #info {
 	@include flexbox(row, wrap);
@@ -395,13 +392,6 @@ dd {
 		flex-basis: 22%;
 		flex-shrink: auto;
 		align-items: flex-start;
-	}
-
-	abbr {
-		font-size: 0.8em;
-		color: $primary-color;
-		border-bottom: 1px dotted $primary-color;
-		cursor: pointer;
 	}
 }
 

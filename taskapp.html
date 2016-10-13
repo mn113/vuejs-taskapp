@@ -11,6 +11,17 @@
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/taskapp.css">
 	<!-- endinject -->
+	<svg style="display:none;">
+		<symbol id="icon-clear" viewBox="0 0 8 8">
+			<path fill="#111111" d="M4 0c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm-1.5 1.78l1.5 1.5 1.5-1.5.72.72-1.5 1.5 1.5 1.5-.72.72-1.5-1.5-1.5 1.5-.72-.72 1.5-1.5-1.5-1.5.72-.72z" />
+		</symbol>
+		<symbol id="icon-trash" viewBox="0 0 8 8">
+			<path fill="#444444" d="M3 0c-.55 0-1 .45-1 1h-1c-.55 0-1 .45-1 1h7c0-.55-.45-1-1-1h-1c0-.55-.45-1-1-1h-1zm-2 3v4.81c0 .11.08.19.19.19h4.63c.11 0 .19-.08.19-.19v-4.81h-1v3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-3.5h-1v3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-3.5h-1z" />
+		</symbol>
+		<symbol id="icon-untrash" viewBox="0 0 8 8">
+			<path fill="#ffffff" d="M3 0c-.55 0-1 .45-1 1h-1c-.55 0-1 .45-1 1h7c0-.55-.45-1-1-1h-1c0-.55-.45-1-1-1h-1zm-2 3v4.81c0 .11.08.19.19.19h4.63c.11 0 .19-.08.19-.19v-4.81h-1v3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-3.5h-1v3.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-3.5h-1z" />
+		</symbol>
+	</svg>
 	<!--[if lte IE 10]><Flexbox polyfill>
 	<script src="js/flexibility.js"></script>
 	<script type="text/javascript">flexibility(document.getElementById("app"));</script>
@@ -69,7 +80,7 @@
 		<span>Filter:</span>
 		<form id="filter" v-bind:search="search">
 			<input v-model.trim="search">
-			<i class="icon clear-button" aria-hidden="true" v-on:click="search = ''"></i>
+			<svg class="icon-clear" v-on:click="search = ''"><use xlink:href="#icon-clear"></use></svg>
 		</form>
 
 		<ul id="task-ul" v-show="filteredTasks.length > 0">
@@ -105,7 +116,7 @@
 						<span class="edit-btn" v-on:click="editTask(task.id)">
 							{{ editingId == task.id ? 'Save' : 'Edit' }}
 						</span>
-						<i class="icon trash-button" aria-hidden="true" v-on:click="deleteTask(task.id)"></i>
+						<svg class="icon-trash" v-on:click="deleteTask(task.id)"><use xlink:href="#icon-trash"></use></svg>
 					</div>
 				</div>
 			</li>
@@ -117,9 +128,12 @@
 				<button v-on:click.prevent="newTask" v-on:keyup.n="newTask">Add Task</button>
 				<button v-show="remaining.length < list.length" v-on:click.prevent="clearCompleted">Clear Completed</button>
 				<button v-show="trash.length > 0">
-					<i class="icon untrash-button" v-bind:class="{active: trash.length > 0}"
-					   v-on:click.prevent="unTrashLast"
-					   data-tooltip="{'offset':10}" title="Undelete tasks" aria-hidden="true" ></i>
+					<svg class="icon-untrash"
+						 v-bind:class="{active: trash.length > 0}"
+						 v-on:click.prevent="unTrashLast"
+						 data-tooltip="{'offset':10}" title="Undelete tasks" aria-hidden="true">
+						<use xlink:href="#icon-untrash"></use>
+					</svg>
 				</button>
 			</form>
 		</div>
@@ -144,7 +158,9 @@
 					<span class="tag" v-on:click="addTag(t)">
 					  {{ t }}
 					</span>
-					<i v-show="editingTags" class="icon trash-button" aria-hidden="true" v-on:click="deleteGlobalTag(t)"></i>
+					<svg class="icon-trash" v-show="editingTags" v-on:click="deleteGlobalTag(t)">
+						<use xlink:href="#icon-trash"></use>
+					</svg>
 				</span>
 			</div>
 			<form v-show="editingTags">
