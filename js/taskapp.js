@@ -1,6 +1,10 @@
-/*global Vue, Sortable */
+/*global Vue, Sortable, Mousetrap */
+'use strict';
+
+var bus = new Vue();
+
 var vueListComponent = Vue.component('taskList' , {
-	template: "#task-list-tpl",
+	template: '#task-list-tpl',
 	props: {
 		list: Array,				// template binding: list = root.tasks
 		trash: Array,
@@ -39,8 +43,8 @@ var vueListComponent = Vue.component('taskList' , {
 		// Set next available TaskId as last item's id + 1:
 			var task,
 				max = 0;
-			for (task in this.list) {
-				var tid = parseInt(this.list[task].id, 10);
+			for (var i = 0; i < this.list.length; i++) {
+				var tid = parseInt(this.list[i].id, 10);
 				if (tid > max) {
 					max = tid;
 				}
@@ -71,12 +75,15 @@ var vueListComponent = Vue.component('taskList' , {
 		},
 		notCompleted: function(task) {
 			return !task.completed;
-		},
+		},		// only used as a filter function
+
 		deleteTask: function(taskId) {
-			// Find referenced task by id:
-			var task = this.list[this.findSelectedRow(taskId)];
-			var index = this.list.indexOf(task);
+			// Where to delete it?
+			var index = this.list.findIndex(function(element) {
+				return (element.id === taskId);
+			});
 			if (index !== -1) {
+				// Remove from list:
 				var trashed = this.list.splice(index, 1);
 				// Add to trash:
 				this.trash.push(trashed[0]);
@@ -92,8 +99,6 @@ var vueListComponent = Vue.component('taskList' , {
 			}
 			// Set list as only our incomplete tasks:
 			this.list = this.list.filter(this.notCompleted);
-			// Not sure why this save hack is needed, but Vue doesn't seem to see change on this.tasks:
-//			bus.$emit('saveAll');
 		},
 		unTrashLast: function() {
 			if (this.trash.length > 0) {
@@ -101,99 +106,7 @@ var vueListComponent = Vue.component('taskList' , {
 				this.list.push(item);
 			}
 		},
-		editTask: function(taskId) {
-			// Finish editing if already editing:
-			if (taskId === this.editingId) {
-				this.editingId = null;
-			}
-			else {
-				// Now set editing item:
-				this.editingId = taskId;
-			}
-		},
-		select: function(taskId) {	// COMBINE TWO FUNCTIONS?
-			this.selectedId = taskId;
-		},
-		setSelectedRow: function(index) {
-			this.selectedId = this.list[index].id;
-		},
-		findSelectedRow: function(taskId = null) {
-			var rowId = null;
-			// Argument passed:
-			if (taskId !== null) {
-				rowId = taskId;
-			}
-			// Check an item is selected:
-			else if (this.selectedId !== null) {
-				rowId = this.selectedId;
-			}
-			else {
-				return null;
-			}
-			// Find it by id within the task list:
-			return this.list.findIndex(function(element) {
-				return (element.id == rowId);
-			});
-		},
-		selectUp: function() {
-			// Get list index from selectedId:
-			var selectedPos = this.findSelectedRow();
-			if (selectedPos > 0) {
-				selectedPos--;
-			}
-			// Set selectedId to new list index:
-			this.setSelectedRow(selectedPos);
-		},
-		selectDown: function() {
-			// Get list index from selectedId:
-			var selectedPos = this.findSelectedRow();
-			if (selectedPos < this.list.length - 1) {
-				selectedPos++;
-			}
-			// Set selectedId to new list index:
-			this.setSelectedRow(selectedPos);
-		},
-		addTag: function(tag) {
-			// Where to add it?
-			var position = this.findSelectedRow();
-			if (position >= 0) {
-				// Check tag doesn't exist on item:
-				if (this.list[position].tags.indexOf(tag) === -1) {
-					// Update tags data:
-					this.list[position].tags.push(tag);
-				}
-			}
-		},
-		addColour: function(colour) {
-			// Where to add it?
-			var position = this.findSelectedRow();
-			if (position >= 0) {
-				if (this.list[position].colours.indexOf(colour) === -1) {
-					// Update tags data:
-					this.list[position].colours.push(colour);
-				}
-			}
-		},
-		deleteTag: function(taskId, tag) {
-			// Where to delete it?
-			var position = this.list.findIndex(function(element) {
-				return (element.id == taskId);
-			});
-			if (position >= 0) {
-				var i = this.list[position].tags.indexOf(tag);
-				this.list[position].tags.splice(i, 1);
-			}
-		},
-		deleteColour: function(taskId, colour) {
-			// Where to delete it?
-			var position = this.list.findIndex(function(element) {
-				return (element.id == taskId);
-			});
-			if (position >= 0) {
-				var i = this.list[position].colours.indexOf(colour);
-				this.list[position].colours.splice(i, 1);
-			}
-		},
+
 		newTask: function() {
 			// Build task:
 			var newTask = {
@@ -210,12 +123,102 @@ var vueListComponent = Vue.component('taskList' , {
 			console.log('task with id', newTask.id, 'added');
 			// Increment id tracker:
 			this.nextTaskId++;
+		},
+		editTask: function(taskId) {
+			// Finish editing if already editing:
+			if (taskId === this.editingId) {
+				this.editingId = null;
+			}
+			else {
+				// Now set editing item:
+				this.editingId = taskId;
+			}
+		},
+
+		selectTask: function(taskId) {
+			this.selectedId = taskId;
+		},
+		selectRow: function(rowId) {
+			this.selectedId = this.list[rowId].id;
+		},
+		selectUp: function() {
+			// Get list index from selectedId:
+			var selectedPos = this.findSelectedRow();
+			if (selectedPos > 0) {
+				selectedPos--;
+			}
+			// Set selectedId to new list index:
+			this.selectRow(selectedPos);
+		},
+		selectDown: function() {
+			// Get list index from selectedId:
+			var selectedPos = this.findSelectedRow();
+			if (selectedPos < this.list.length - 1) {
+				selectedPos++;
+			}
+			// Set selectedId to new list index:
+			this.selectRow(selectedPos);
+		},
+		findSelectedRow: function() {
+			// Check an item is selected:
+			if (this.selectedId !== null) {
+				var rowId = this.selectedId;
+			}
+			else {
+				return null;
+			}
+			// Find it by id within the task list:
+			return this.list.findIndex(function(element) {
+				return (element.id === rowId);
+			});
+		},
+
+		addTag: function(tag) {		// can only be added to selected row
+			// Where to add it?
+			var position = this.findSelectedRow();
+			if (position >= 0) {
+				// Check tag doesn't exist on item:
+				if (this.list[position].tags.indexOf(tag) === -1) {
+					// Update tags data:
+					this.list[position].tags.push(tag);
+				}
+			}
+		},
+		addColour: function(colour) {	// can only be added to selected row
+			// Where to add it?
+			var position = this.findSelectedRow();
+			if (position >= 0) {
+				if (this.list[position].colours.indexOf(colour) === -1) {
+					// Update tags data:
+					this.list[position].colours.push(colour);
+				}
+			}
+		},
+		deleteTag: function(taskId, tag) {
+			// Where to delete it?
+			var position = this.list.findIndex(function(element) {
+				return (element.id === taskId);
+			});
+			if (position >= 0) {
+				var i = this.list[position].tags.indexOf(tag);
+				this.list[position].tags.splice(i, 1);
+			}
+		},
+		deleteColour: function(taskId, colour) {
+			// Where to delete it?
+			var position = this.list.findIndex(function(element) {
+				return (element.id === taskId);
+			});
+			if (position >= 0) {
+				var i = this.list[position].colours.indexOf(colour);
+				this.list[position].colours.splice(i, 1);
+			}
 		}
 	}
 });
 
 var vueUIComponent = Vue.component('taskUi' , {
-	template: "#ui-tpl",
+	template: '#ui-tpl',
 	props: {
 		tags: Array,
 		colours: Array,
@@ -269,13 +272,11 @@ var exampleTasks = [
 	{ id: 2, body: 'Finish programming app', completed: false, tags: ['2h+'], colours: ['orange', 'green'] }
 ];
 
-var bus = new Vue();
-
 var vm = new Vue({
 	config: {
 		debug: true
 	},
-	el: "#app",
+	el: '#app',
 
 	data: {
 		// User-changeable:
@@ -342,21 +343,22 @@ var vm = new Vue({
 			console.info('Data saved.');
 		},
 		exportTasks: function(format) {
-			if (format == 'csv') {
-				var csvContent = "data:text/csv;charset=utf-8,";
-				for (var i in this.tasks) {
+			var encodedUri;
+			if (format === 'csv') {
+				var csvContent = 'data:text/csv;charset=utf-8,';
+				for (var i = 0; i < this.tasks.length; i++) {
 					var task = this.tasks[i];
-   					csvContent += task.body + ',' + task.completed.toString() + ',' + task.tags.toString() + ',' + task.colours.toString() + "\n";
-				};
+   					csvContent += task.body + ',' + task.completed.toString() + ',' + task.tags.toString() + ',' + task.colours.toString() + '\n';
+				}
 				// Use JavaScript's window.open and encodeURI functions to download the CSV file:
-				var encodedUri = encodeURI(csvContent);
+				encodedUri = encodeURI(csvContent);
 				window.open(encodedUri);
 			}
-			else if (format == 'json') {
-				var jsonContent = "data:text/json;charset=utf-8,";
+			else if (format === 'json') {
+				var jsonContent = 'data:text/json;charset=utf-8,';
 				jsonContent += JSON.stringify(this.tasks);
 				// Use JavaScript's window.open and encodeURI functions to download the CSV file:
-				var encodedUri = encodeURI(jsonContent);
+				encodedUri = encodeURI(jsonContent);
 				window.open(encodedUri);
 			}
 		}
@@ -365,7 +367,7 @@ var vm = new Vue({
 
 
 // Sortable.js
-var taskListElement = document.getElementById("task-ul");
+var taskListElement = document.getElementById('task-ul');
 Sortable.create(taskListElement, {
 	// Reposition the dragged list item within the original data array:
 	onSort: function(evt) {
@@ -376,7 +378,7 @@ Sortable.create(taskListElement, {
 	}
 });
 
-
+/*
 // KeyCodes:
 // Move up:
 Mousetrap.bind('up', function() { vm.$refs.tasklist.selectUp(); });	// OK
@@ -392,9 +394,18 @@ Mousetrap.bind('D', function() { vm.$refs.tasklist.deleteTask(vm.$refs.tasklist.
 Mousetrap.bind('U', function() { vm.$refs.tasklist.unTrashLast(); });	// OK
 // n = new task:
 Mousetrap.bind('n', function() { vm.$refs.tasklist.newTask(); });	// OK
-
+*/
+Mousetrap.bind({
+	'up': 	function() { vm.$refs.tasklist.selectUp(); },
+	'down': function() { vm.$refs.tasklist.selectDown(); },
+	'enter':function() { vm.$refs.tasklist.editTask(vm.$refs.tasklist.selectedId); },
+	'x': 	function() { vm.$refs.tasklist.toggleCompleted(vm.$refs.tasklist.selectedId); },
+	'D': 	function() { vm.$refs.tasklist.deleteTask(vm.$refs.tasklist.selectedId); },
+	'U': 	function() { vm.$refs.tasklist.unTrashLast(); },
+	'n': 	function() { vm.$refs.tasklist.newTask(); }
+});
 
 // Save state before close or reload:
-window.addEventListener("beforeunload", function(e){
+window.addEventListener('beforeunload', function(e){
 	bus.$emit('saveAll');
 }, false);

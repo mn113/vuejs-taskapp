@@ -1,0 +1,386 @@
+// SASS
+@import 'normalize';
+
+// Variables:
+$primary-color: #5696e0;
+
+@mixin flexbox($direction, $wrap) {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	-js-display: flex;
+	display: flex;
+	flex-direction: $direction;
+	flex-wrap: $wrap;
+}
+
+
+/*
+ * GENERAL
+ */
+html, body {
+	height: 100%;
+}
+body {
+	font-size: 100%;
+	color: #111;
+	background: #ccc url(../img/sayagata-80px.png) repeat;
+	font-family: "Century Gothic", "Lucida Grande", Helvetica, Arial, sans-serif;
+	font-size: 1.0rem;
+	line-height: 1.2rem;
+}
+/* clearfix (latest & greatest) */
+.cf:before, .cf:after {content:""; display:table;}
+.cf:after {clear:both;}
+.cf {zoom:1;} /* For IE 6/7 (trigger hasLayout) */
+
+
+/*
+ * LAYOUTS
+ */
+ #app section {
+	border: 1px solid #999;
+	box-shadow: rgba(0,0,0,0.5) 0 0 10px;
+}
+#app > section {
+	background: white;
+	height: 50%;
+}
+#sidebar > section {
+	background: #eee;
+	font-size: 90%;
+	padding: 0.8em 1.1em 1.1em;
+}
+/* NARROWEST: STACK SECTIONS AND FILL TO SCREEN EDGE */
+@media screen and (max-width:499px) {
+ 	#app {
+ 		margin: 0;
+ 		width: 100%;
+ 	}
+ 	#app section {
+ 		padding: 1em 1.3em 1.3em;
+		margin: 0 0 0.5em;
+ 	}
+}
+/* MEDIUM: STACK SECTIONS AND ALLOW SMALL MARGIN */
+@media screen and (min-width:500px) {
+	#app {
+		margin: 2em auto;
+		width: 80%;
+	}
+	#app section {
+		padding: 1em 1.3em 1.3em;
+		margin: 0 0.5em 0.5em;
+	}
+}
+/* WIDE: FLEXBOX, 2-COLUMNS, CENTRED, AUTO MARGIN */
+@media screen and (min-width:800px) {
+	#app {
+		margin: 2em auto 0;
+		width: 85%;
+		@include flexbox(row, nowrap);
+	   	justify-content: center;
+	}
+	#app #sidebar {
+		@include flexbox(column, nowrap);
+		justify-content: flex-start;
+	}
+	#app section {
+		padding: 1em 1.3em 1.3em;
+		margin: 0 0.5em 0.5em;
+	}
+	#app > section {
+		width: 60%;
+		background: white;
+	}
+	#sidebar > section {
+	   width: 12em;
+	   min-height: 20%;
+	}
+}
+
+
+/*
+ * FONTS
+ */
+h1 {
+	font-size: 1.8rem;
+	color: #222;
+}
+h1 .subhead {
+	font-size: 1.5rem;
+	color: #666;
+}
+h3 {
+	margin: 1em 0 0.5em
+}
+
+
+/*
+ * LIST OF TASKS
+ */
+ul {
+	list-style: none;
+	padding: 0;
+}
+li.list-item {
+	padding: 5px;
+	border: 1px solid #aaa;
+	min-width: 200px;
+}
+li:not(:last-child) {
+	border-bottom: 0;
+}
+li.completed .task-body {
+	text-decoration: line-through;
+	color: #999;
+}
+li.selected {
+	background: #def;
+}
+li.list-item input[type=text] {
+	min-width: 80%;
+}
+li.list-item input[type=checkbox] {
+	margin-right: 4px;
+}
+.flex-container {
+	@include flexbox(row, nowrap);
+	justify-content: space-between;
+}
+.flex-container > .group {
+	@include flexbox(row, wrap);
+	align-items: center;
+}
+.flex-container > .group:first-child {
+	flex-basis: 50%;
+	justify-content: flex-start;
+}
+.flex-container > .group:last-child {
+	@include flexbox(row, wrap);
+	flex-basis: 50%;
+	justify-content: flex-end;
+}
+.flex-container .group_inner:first-child {
+	justify-content: flex-end;
+	align-items: center;
+}
+.flex-container .group_inner:last-child {
+	@include flexbox(row, nowrap);
+	flex-basis: 3.3em;
+	justify-content: flex-end;
+}
+
+
+/*
+* TASK ACTIONS
+*/
+.editBtn {
+	color: #666;
+	padding: 0 0.8em;
+	font-size: 0.8em;
+}
+.editBtn:hover {
+	cursor: pointer;
+	color: cadetblue;
+}
+.completed .editBtn {
+	display: none;
+}
+.fa:hover {
+	cursor: pointer;
+}
+
+
+/*
+* BUTTONS
+*/
+#task-buttons {
+	float: right;
+}
+button {
+	border: 0;
+	background: $primary-color;
+	color: white;
+	border-radius: 8px;
+	font-size: 0.8rem;
+	padding: 4px 8px;
+}
+button:hover {
+	background: #61aaff;
+}
+#task-buttons i {
+ 	border: 0;
+ 	background: #999;
+ 	color: white;
+ 	border-radius: 8px;
+ 	padding: 6px 8px;
+}
+#task-buttons i.active {
+	background: $primary-color;
+}
+#task-buttons i.active:hover {
+	 background: #61aaff;
+}
+
+
+/*
+ * TAGS & COLOURS SECTION
+ */
+.tag {
+	font-size: 0.7em;
+	color: white;
+	border-radius: 10px;
+	padding: 1px 4px;
+	background: #bbb;
+	border: 1px solid #999;
+	margin: 0 1px;
+	min-width: 2em;
+	text-align: center;
+}
+.colour {
+	display: inline-block;
+	min-width: 10px;
+	min-height: 10px;
+	border-radius: 6px;
+	margin: 0 1px;
+}
+.list-item .colour:hover,
+.list-item .tag:hover {
+	cursor: url(../img/delete-cursor.png), crosshair;
+}
+.red { background: #f33; border: 1px solid #c00; }
+.orange { background: #f93; border: 1px solid #c60; }
+.yellow { background: #ff3; border: 1px solid #cc0; }
+.green { background: #3c3; border: 1px solid #090; }
+.blue { background: #39c; border: 1px solid #069; }
+.purple { background: #63c; border: 1px solid #309; }
+.pink { background: #c3c; border: 1px solid #909; }
+
+
+/*
+ * LOWER TAGS SECTION
+ */
+#tag-list, #colour-list {
+	border: 1px solid #999;
+	background: #fff;
+	padding: 0.5em;
+	margin: 0.5em 0;
+}
+#tag-list p, #colour-list p {
+	margin: 0 0 0.4em 0;
+}
+#tag-list .tag:hover,
+#colour-list .colour:hover {
+	cursor: url(../img/add-cursor.png), crosshair;
+}
+#tag-list .editBtn {
+	float: right;
+}
+#tag-list > div {
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+}
+#tag-list.editing > div {
+	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+#tag-list.editing > div > span {
+	@include flexbox(row, nowrap);
+	margin-bottom: 4px;
+	justify-content: flex-start;
+	align-items: center;
+}
+#tag-list.editing > div > span > .tag {
+	flex-basis: 8em;
+	margin-right: 1em;
+}
+#tag-list.editing input {
+	border: 1px solid #999999;
+}
+
+
+/*
+ * FILTER SECTION
+ */
+#filter {
+	border: 1px solid #aaa;
+	border-radius: 12px;
+	padding: 3px 6px;
+	width: 14em;
+	position: relative;
+	display: inline-block;
+}
+#filter input {
+	border: 0;
+	width: 95%;
+}
+#filter .fa-times-circle {
+	position: absolute;
+	top: 4px;
+	right: 6px;
+}
+input:focus {
+    outline: none;
+}
+
+
+/*
+ * DRAG & DROP
+ */
+[draggable] {
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	/* Required to make elements draggable in old WebKit */
+	-khtml-user-drag: element;
+	-webkit-user-drag: element;
+}
+.dragging {
+	opacity: 0.8;
+	color: #6894D1;
+}
+.drag-over {
+	text-decoration: underline;
+}
+.drag-enter {
+	color: #C93742;
+}
+
+
+/*
+ * INFO
+ */
+dt {
+    float: left;
+    clear: left;
+	margin-left: 0.5em;
+}
+dd {
+	margin-left: 2.5em;
+}
+#info p {
+	clear: both;
+}
+#info p abbr {
+	font-size: 0.8em;
+	color: $primary-color;
+	border-bottom: 1px dotted $primary-color;
+	cursor: pointer
+}
+
+
+/*
+ * Tooltip.js styles
+ */
+ #tooltip {
+	position:absolute;
+	background:rgba(86, 150, 224, 0.7);
+	color: white;
+	font-size: 0.8rem;
+	padding:6px;
+}

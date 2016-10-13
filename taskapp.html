@@ -7,8 +7,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>TaskApp</title>
 	<link rel="icon" type="image/x-icon" href="img/favicon.ico">
+	<!-- inject:css -->
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/taskapp.css">
+	<!-- endinject -->
 	<!--[if lte IE 10]><Flexbox polyfill>
 	<script src="js/flexibility.js"></script>
 	<script type="text/javascript">flexibility(document.getElementById("app"));</script>
@@ -65,7 +67,7 @@
 				v-for="(index, task) in filteredTasks"
 				data-id="{{ index }}"
 				v-bind:class="{completed: task.completed, selected: task.id == selectedId}"
-				v-on:click="select(task.id)">
+				v-on:click="selectTask(task.id)">
 
 				<div class="group">
 					<input type="checkbox" v-model="task.completed">
@@ -155,13 +157,14 @@
 	</template>
 
 
-	<!--script src="js/zepto.min.js"></script-->
-	<!--script src="js/vue.2.0.1.js"></script-->
+	<!-- inject:js -->
 	<script src="js/mousetrap.js"></script>
+	<script src="js/mousetrap-bind-dictionary.min.js"></script>
 	<script src="js/vue.1.0.28.js"></script>
 	<script src="js/Sortable.js"></script>
 	<script src="js/taskapp.js"></script>
 	<script src="js/fontawesome_bfab10ea54.js"></script>
 	<script src="js/Tooltip.js"></script>
+	<!-- endinject -->
 </body>
 </html>
