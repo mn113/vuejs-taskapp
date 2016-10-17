@@ -53,7 +53,7 @@
 					<dt>D</dt><dd>Delete task</dd>
 					<dt>U</dt><dd>Undelete task</dd>
 					<p>Re-order tasks by dragging and dropping.<br>
-					Add and remove tags by clicking them.</p>
+					Add and remove <span class="tag">tags</span> by clicking them.</p>
 				</dl>
 			</div>
 			<div>
@@ -126,7 +126,7 @@
 		<div class="cf">
 			<form id="task-buttons">
 				<button v-on:click.prevent="newTask" v-on:keyup.n="newTask">Add Task</button>
-				<button v-show="remaining.length < list.length" v-on:click.prevent="clearCompleted">Clear Completed</button>
+				<button v-show="remaining < list.length" v-on:click.prevent="clearCompleted">Clear Completed</button>
 				<button v-show="trash.length > 0">
 					<svg class="icon-untrash"
 						 v-bind:class="{active: trash.length > 0}"

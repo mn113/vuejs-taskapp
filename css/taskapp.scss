@@ -27,60 +27,61 @@ body {
 /*
  * LAYOUTS
  */
- @mixin flexbox($direction, $wrap) {
- 	-js-display: flex;	/* for polyfill */
- 	display: flex;
- 	flex-direction: $direction;
- 	flex-wrap: $wrap;
- }
- #wrap {
- 	width: 80%;
- 	margin: 0 auto;
- }
- #app {
- 	margin: 2em auto 0.3em;
+@mixin flexbox($direction, $wrap) {
+	-js-display: flex;
+	/* for polyfill */
+	display: flex;
+	flex-direction: $direction;
+	flex-wrap: $wrap;
+}
+#wrap {
+	width: 80%;
+	margin: 0 auto;
+}
+#app {
+	margin: 2em auto 0.3em;
 	@include flexbox(row, wrap);
- 	flex-direction: row;
- 	flex-wrap: wrap;
- 	justify-content: center;
- 	align-content: stretch;
- }
- section {
- 	border: 1px solid #999;
- 	box-shadow: rgba(0, 0, 0, 0.5) 0 0 10px;
- 	margin: 0 0.7em 0.6em 0;
- }
- #tasks-container {
- 	background: white;
- 	padding: 1em 1.3em 1.3em;
- 	min-height: 50%;
- 	flex-basis: auto;
- 	flex-grow: 3;
- }
- #toolbox {
- 	background: #eee;
- 	padding: 0.8em 1.1em 1.1em;
- 	font-size: 90%;
- 	min-height: 50%;
- 	flex-basis: 12em;
- 	flex-grow: 1;
- }
- #info {
- 	background: #eee;
- 	padding: 0.8em 1.1em 1.1em;
- 	font-size: 90%;
- }
- /* NARROWEST: STACK SECTIONS AND FILL TO SCREEN EDGE */
- @media screen and (max-width: 499px) {
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: stretch;
+}
+section {
+	border: 1px solid #999;
+	box-shadow: rgba(0, 0, 0, 0.5) 0 0 10px;
+	margin: 0 0.7em 0.6em 0;
+}
+#tasks-container {
+	background: white;
+	padding: 1em 1.3em 1.3em;
+	min-height: 50%;
+	flex-basis: auto;
+	flex-grow: 3;
+}
+#toolbox {
+	background: #eee;
+	padding: 0.8em 1.1em 1.1em;
+	font-size: 90%;
+	min-height: 50%;
+	flex-basis: 12em;
+	flex-grow: 1;
+}
+#info {
+	background: #eee;
+	padding: 0.8em 1.1em 1.1em;
+	font-size: 90%;
+}
+/* NARROWEST: STACK SECTIONS AND FILL TO SCREEN EDGE */
+@media screen and (max-width: 499px) {
   	#wrap {
  		width: 100%;
   	}
  	#app {
  		margin: 1em 0 0.3em;
  	}
- }
- /* MEDIUM: STACK SECTIONS AND ALLOW SMALL MARGIN */
- @media screen and (min-width: 500px) and (max-width: 799px) {
+}
+/* MEDIUM: STACK SECTIONS AND ALLOW SMALL MARGIN */
+@media screen and (min-width: 500px) and (max-width: 799px) {
  	#wrap {
  		width: 90%;
  	}
@@ -92,12 +93,12 @@ body {
 	 		margin: 0 0 0.5em;
 	 	}
  	}
- }
- /* WIDE: FLEXBOX, 2-COLUMNS, CENTRED, AUTO MARGIN */
- @media screen and (min-width: 800px) {
- 	#wrap {
- 	}
- }
+}
+/* WIDE: FLEXBOX, 2-COLUMNS, CENTRED, AUTO MARGIN */
+@media screen and (min-width: 800px) {
+	#wrap {
+	}
+}
 
 
 /*
@@ -225,9 +226,9 @@ li.selected {
 		cursor: pointer;
 		color: $primary-color;
 	}
-}
-.completed .edit-btn {
-	display: none;
+	.completed & {
+		display: none;
+	}
 }
 svg {
 	width: 1em;
@@ -280,7 +281,7 @@ button {
 	@extend %bubble;
 	font-size: 0.7em;
 	color: white;
-	padding: 1px 4px;
+	padding: 0 4px;
 	border-radius: 10px;
 	text-align: center;
 }
@@ -297,10 +298,12 @@ button {
 .pink { background: #c3c; border: 1px solid #909; }
 
 .list-item {
-	.tag:hover, .colour:hover {
+	.tag:hover,
+	.colour:hover {
 		cursor: url(../img/delete-cursor.png), crosshair;
 	}
 }
+
 
 /*
  * LOWER TAGS SECTION
@@ -311,7 +314,8 @@ button {
 	padding: 0.5em;
 	margin: 0.5em 0;
 
-	.tag:hover, .colour:hover {
+	.tag:hover,
+	.colour:hover {
 		cursor: url(../img/add-cursor.png), crosshair;
 	}
 
@@ -366,6 +370,7 @@ dt {
 	float: left;
 	clear: left;
 	margin-left: 0.5em;
+	font-weight: bold;
 }
 dd {
 	margin-left: 2.5em;
@@ -383,15 +388,35 @@ dd {
 }
 #info {
 	@include flexbox(row, wrap);
-	justify-content: space-between;
+	justify-content: stretch;
+	padding: 10px 0 0 10px;
 
 	> div {
 		border: 1px solid #999;
 		background: #fff;
 		padding: 0.5em;
-		flex-basis: 22%;
-		flex-shrink: auto;
-		align-items: flex-start;
+		margin: 0 10px 10px 0;
+		flex-shrink: 1;
+		flex-grow: 1;
+		flex-basis: 22%;	/* 4 columns */
+	}
+}
+/* NARROWEST: STACK SECTIONS AND FILL TO SCREEN EDGE */
+@media screen and (max-width: 499px) {
+	#info > div {
+		flex-basis: 95%;	/* 1 columns (all wrap) */
+	}
+}
+/* MEDIUM: STACK SECTIONS AND ALLOW SMALL MARGIN */
+@media screen and (min-width: 500px) and (max-width: 799px) {
+	#info > div {
+		flex-basis: 45%;	/* 3 columns, 1 wraps */
+	}
+}
+/* WIDE: FLEXBOX, 2-COLUMNS, CENTRED, AUTO MARGIN */
+@media screen and (min-width: 800px) and (max-width: 1040px) {
+	#info > div {
+		flex-basis: 30%;	/* 2 columns of 2 */
 	}
 }
 
