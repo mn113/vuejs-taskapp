@@ -401,7 +401,8 @@ var TaskApp = (function() {
         bus: bus,
         vueListComponent: vueListComponent,
         vueUIComponent: vueUIComponent,
-        vm: vm
+        vm: vm,
+		init: init
     };
 }());
 
