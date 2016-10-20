@@ -22,12 +22,12 @@
 			<path fill="#FFFFFF" d="M3.67,0.086C3.152-0.098,2.577,0.176,2.393,0.694L1.451,0.359C0.933,0.175,0.357,0.448,0.173,0.966 l6.596,2.345C6.953,2.793,6.68,2.218,6.162,2.034L5.219,1.699C5.404,1.181,5.13,0.606,4.612,0.421L3.67,0.086z M1,3v4.81 C1,7.92,1.08,8,1.19,8h4.63c0.11,0,0.19-0.08,0.19-0.19V3h-1v3.5c0,0.28-0.22,0.5-0.5,0.5c-0.28,0-0.5-0.22-0.5-0.5V3h-1v3.5 c0,0.28-0.22,0.5-0.5,0.5c-0.28,0-0.5-0.22-0.5-0.5V3h-1H1z"/>
 		</symbol>
 	</svg>
+	<!--[if lte IE 8]>
+	<script src="js/html5shiv.js"></script>
+	<![endif]-->
 	<!--[if lte IE 10]><Flexbox polyfill>
 	<script src="js/flexibility.js"></script>
 	<script type="text/javascript">flexibility(document.getElementById("app"));</script>
-	<![endif]-->
-	<!--[if lte IE 8]>
-	<script src="js/html5shiv.js"></script>
 	<![endif]-->
 </head>
 <body>
@@ -185,7 +185,6 @@
 	</section>
 	</template>
 
-
 	<!-- inject:js -->
 	<script src="js/mousetrap.js"></script>
 	<script src="js/mousetrap-bind-dictionary.min.js"></script>
@@ -194,5 +193,25 @@
 	<script src="js/taskapp.js"></script>
 	<script src="js/Tooltip.js"></script>
 	<!-- endinject -->
+
+	<!-- start testing -->
+	<div id="mocha">
+        <p><a href=".">Index</a></p>
+    </div>
+    <div id="messages"></div>
+    <div id="fixtures"></div>
+    <script src="test/vendor/mocha.js"></script>
+    <script src="test/vendor/chai.js"></script>
+    <script src="test/vendor/sinon-1.7.1.js"></script>
+    <script src="cow.js"></script>
+    <script type="text/javascript">
+        mocha.setup('bdd');
+    </script>
+    <script src="cow_test.js"></script>
+    <script type="text/javascript">
+        mocha.run();
+    </script>
+	<!-- end testing -->
+
 </body>
 </html>
