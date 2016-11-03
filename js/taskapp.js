@@ -1,9 +1,12 @@
 /*global Vue, Sortable, Mousetrap */
+
 var TaskApp = (function() {
 	'use strict';
 
+	// Inter-component communications bus (can emit events):
 	var bus = new Vue();
 
+	// The main task list component:
 	var vueListComponent = Vue.component('taskList' , {
 		template: '#task-list-tpl',
 		props: {
@@ -218,6 +221,7 @@ var TaskApp = (function() {
 		}
 	});
 
+	// The UI component outside the task list itself (mostly tag- & colour-code):
 	var vueUIComponent = Vue.component('taskUi' , {
 		template: '#ui-tpl',
 		props: {
@@ -267,12 +271,14 @@ var TaskApp = (function() {
 		}
 	});
 
+	// Example data which is loaded if nothing in LocalStorage:
 	var exampleTasks = [
 		{ id: 0, body: 'Go to the bank', completed: false, tags: ['30min'], colours: ['red'] },
 		{ id: 1, body: 'Buy 5 gallons of milk', completed: false, tags: ['5min'], colours: ['blue'] },
 		{ id: 2, body: 'Finish programming app', completed: false, tags: ['2h+'], colours: ['orange', 'green'] }
 	];
 
+	// The root Vue instance / data store:
 	var vm = new Vue({
 		config: {
 			debug: true
@@ -366,6 +372,7 @@ var TaskApp = (function() {
 		}
 	});
 
+	// Initialise the non-Vue aspects of the app:
 	var init = function() {
 		// Sortable.js
 		var taskListElement = document.getElementById('task-ul');
@@ -396,7 +403,7 @@ var TaskApp = (function() {
 		}, false);
 	};
 
-	// Publically reveal the module:
+	// Publicly reveal the module:
 	return {
         bus: bus,
         vueListComponent: vueListComponent,

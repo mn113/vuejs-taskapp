@@ -413,7 +413,7 @@ html, body {
 
 /* line 14, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 body {
-  font-size: 1rem;
+  font-size: 100%;
   line-height: 1.4rem;
   color: #111;
   background: #79b url(../img/sayagata-80px-blue.png) repeat;
@@ -469,9 +469,10 @@ body {
 section {
   border: 1px solid #999;
   box-shadow: rgba(0, 0, 0, 0.5) 0 0 10px;
-  margin: 0 0.7em 0.6em 0; }
+  margin: 0 0.7em 0.6em 0;
+  border-radius: 4px; }
 
-/* line 54, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 55, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #tasks-container {
   background: white;
   padding: 1em 1.3em 1.3em;
@@ -483,11 +484,11 @@ section {
       -ms-flex-positive: 3;
           flex-grow: 3; }
 
-/* line 61, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 62, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #toolbox {
   background: #eee;
   padding: 0.8em 1.1em 1.1em;
-  font-size: 90%;
+  font-size: 0.9rem;
   min-height: 50%;
   -webkit-flex-basis: 12em;
       -ms-flex-preferred-size: 12em;
@@ -496,30 +497,30 @@ section {
       -ms-flex-positive: 1;
           flex-grow: 1; }
 
-/* line 69, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 70, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #info {
   background: #eee;
   padding: 0.8em 1.1em 1.1em;
-  font-size: 90%; }
+  font-size: 0.9rem; }
 
 /* NARROWEST: STACK SECTIONS AND FILL TO SCREEN EDGE */
 @media screen and (max-width: 499px) {
-  /* line 76, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 77, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #wrap {
     width: 100%; }
-  /* line 79, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 80, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #app {
     margin: 1em 0 0.3em; } }
 
 /* MEDIUM: STACK SECTIONS AND ALLOW SMALL MARGIN */
 @media screen and (min-width: 500px) and (max-width: 799px) {
-  /* line 85, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 86, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #wrap {
     width: 90%; }
-  /* line 88, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 89, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #app {
     margin: 1.2em 0 0.3em; }
-    /* line 91, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+    /* line 92, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
     #app section {
       padding: 0.8em 1.1em 1.1em;
       margin: 0 0 0.5em; } }
@@ -528,23 +529,23 @@ section {
 /*
  * FONTS
  */
-/* line 107, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 108, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 h1 {
   font-size: 1.8rem;
   color: #222; }
-  /* line 111, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 112, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   h1 .subhead {
     font-size: 1.5rem;
     color: #666; }
 
-/* line 116, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 117, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 h3 {
   margin: 0.5em 0; }
 
 /*
  * FILTER SECTION
  */
-/* line 124, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 125, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #filter {
   border: 1px solid #aaa;
   border-radius: 12px;
@@ -552,54 +553,54 @@ h3 {
   width: 14em;
   display: inline-block;
   position: relative; }
-  /* line 132, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 133, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #filter input {
     border: 0;
     width: 95%; }
-  /* line 137, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 138, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #filter .icon-clear {
     position: absolute;
     top: 6px;
     right: 6px; }
 
-/* line 143, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 144, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 input:focus {
   outline: none; }
 
 /*
  * LIST OF TASKS
  */
-/* line 151, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 152, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 ul {
   list-style: none;
   padding: 0; }
 
-/* line 155, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 156, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 li.list-item {
   padding: 5px;
   border: 1px solid #aaa;
   min-width: 200px; }
-  /* line 160, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 161, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   li.list-item input[type=text] {
     min-width: 80%; }
-  /* line 163, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 164, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   li.list-item input[type=checkbox] {
     margin-right: 4px; }
 
-/* line 167, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 168, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 li:not(:last-child) {
   border-bottom: 0; }
 
-/* line 170, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 171, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 li.completed .task-body {
   text-decoration: line-through;
   color: #999; }
 
-/* line 174, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 175, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 li.selected {
   background: #def; }
 
-/* line 177, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 178, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .flex-container {
   -js-display: flex;
   /* for polyfill */
@@ -615,7 +616,7 @@ li.selected {
   -webkit-justify-content: space-between;
       -ms-flex-pack: justify;
           justify-content: space-between; }
-  /* line 181, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 182, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   .flex-container > .group {
     display: inline-block;
     -js-display: flex;
@@ -632,7 +633,7 @@ li.selected {
     -webkit-align-items: center;
         -ms-flex-align: center;
             align-items: center; }
-    /* line 186, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+    /* line 187, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
     .flex-container > .group:first-child {
       -js-display: flex;
       /* for polyfill */
@@ -651,7 +652,7 @@ li.selected {
       -webkit-justify-content: flex-start;
           -ms-flex-pack: start;
               justify-content: flex-start; }
-    /* line 191, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+    /* line 192, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
     .flex-container > .group:last-child {
       -js-display: flex;
       /* for polyfill */
@@ -670,7 +671,7 @@ li.selected {
       -webkit-justify-content: flex-end;
           -ms-flex-pack: end;
               justify-content: flex-end; }
-  /* line 197, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 198, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   .flex-container .group-inner {
     -js-display: flex;
     /* for polyfill */
@@ -687,7 +688,7 @@ li.selected {
     -webkit-justify-content: flex-end;
         -ms-flex-pack: end;
             justify-content: flex-end; }
-    /* line 202, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+    /* line 203, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
     .flex-container .group-inner:first-child {
       -js-display: flex;
       /* for polyfill */
@@ -703,7 +704,7 @@ li.selected {
       -webkit-align-items: center;
           -ms-flex-align: center;
               align-items: center; }
-    /* line 206, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+    /* line 207, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
     .flex-container .group-inner:last-child {
       -js-display: flex;
       /* for polyfill */
@@ -723,31 +724,31 @@ li.selected {
 /*
 * TASK ACTIONS
 */
-/* line 220, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 221, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .edit-btn {
   color: #666;
   padding: 0 0.8em;
-  font-size: 0.8em; }
-  /* line 225, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  font-size: 0.8rem; }
+  /* line 226, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   .edit-btn:hover {
     cursor: pointer;
     color: #5696e0; }
-  /* line 229, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 230, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   .completed .edit-btn {
     display: none; }
 
-/* line 233, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 234, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 svg {
   width: 1em;
   height: 1em; }
-  /* line 237, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 238, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   svg:hover {
     cursor: pointer; }
 
 /*
 * BUTTONS
 */
-/* line 246, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 247, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 button {
   border: 0;
   background-color: #5696e0;
@@ -755,14 +756,14 @@ button {
   border-radius: 8px;
   font-size: 0.8rem;
   padding: 3px 6px; }
-  /* line 254, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 255, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   button:hover {
     background-color: #81b1e8; }
 
-/* line 258, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 259, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #task-buttons {
   float: right; }
-  /* line 261, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 262, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #task-buttons .icon-untrash {
     padding: 0 2px 0 3px;
     margin-bottom: -2px;
@@ -771,7 +772,7 @@ button {
 /*
  * TAGS & COLOURS SECTION
  */
-/* line 272, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 273, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .tag, .colour {
   display: inline-block;
   background: #bbb;
@@ -780,54 +781,54 @@ button {
   min-width: 11px;
   min-height: 11px; }
 
-/* line 280, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 281, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .tag {
-  font-size: 0.7em;
+  font-size: 0.7rem;
   color: white;
   padding: 0 4px;
   border-radius: 10px;
   text-align: center; }
 
-/* line 288, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 289, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .colour {
   border-radius: 6px; }
 
-/* line 292, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 293, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .red {
   background: #f33;
   border: 1px solid #c00; }
 
-/* line 293, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 294, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .orange {
   background: #f93;
   border: 1px solid #c60; }
 
-/* line 294, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 295, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .yellow {
   background: #ff3;
   border: 1px solid #cc0; }
 
-/* line 295, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 296, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .green {
   background: #3c3;
   border: 1px solid #090; }
 
-/* line 296, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 297, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .blue {
   background: #39c;
   border: 1px solid #069; }
 
-/* line 297, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 298, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .purple {
   background: #63c;
   border: 1px solid #309; }
 
-/* line 298, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 299, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .pink {
   background: #c3c;
   border: 1px solid #909; }
 
-/* line 301, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 302, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .list-item .tag:hover,
 .list-item .colour:hover {
   cursor: url(../img/delete-cursor.png), crosshair; }
@@ -835,31 +836,31 @@ button {
 /*
  * LOWER TAGS SECTION
  */
-/* line 311, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 312, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #tag-list, #colour-list {
   border: 1px solid #999;
   background: #fff;
   padding: 0.5em;
   margin: 0.5em 0; }
-  /* line 317, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 318, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #tag-list .tag:hover,
   #tag-list .colour:hover, #colour-list .tag:hover,
   #colour-list .colour:hover {
     cursor: url(../img/add-cursor.png), crosshair; }
-  /* line 322, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 323, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #tag-list p, #colour-list p {
     margin: 0;
     margin-bottom: 0.4em; }
 
-/* line 328, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 329, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #tag-list .tag {
   margin-bottom: 2px; }
 
-/* line 332, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 333, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #tag-list .edit-btn {
   float: right; }
 
-/* line 336, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 337, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #tag-list > div {
   -webkit-flex-direction: row;
       -ms-flex-direction: row;
@@ -871,7 +872,7 @@ button {
       -ms-flex-pack: start;
           justify-content: flex-start; }
 
-/* line 342, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 343, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #tag-list.editing > div {
   -webkit-flex-direction: column;
       -ms-flex-direction: column;
@@ -882,7 +883,7 @@ button {
   -webkit-justify-content: space-between;
       -ms-flex-pack: justify;
           justify-content: space-between; }
-  /* line 347, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 348, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #tag-list.editing > div span {
     -js-display: flex;
     /* for polyfill */
@@ -902,7 +903,7 @@ button {
     -webkit-align-items: center;
         -ms-flex-align: center;
             align-items: center; }
-    /* line 353, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+    /* line 354, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
     #tag-list.editing > div span .tag {
       -webkit-flex-basis: 5em;
           -ms-flex-preferred-size: 5em;
@@ -913,36 +914,36 @@ button {
       margin-right: 1em;
       margin-bottom: 0; }
 
-/* line 361, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 362, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #tag-list.editing input {
   border: 1px solid #999; }
 
 /*
  * INFO
  */
-/* line 369, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 370, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 dt {
   float: left;
   clear: left;
   margin-left: 0.5em;
   font-weight: bold; }
 
-/* line 375, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 376, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 dd {
   margin-left: 2.5em; }
 
-/* line 379, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 380, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #info p, #toolbox p {
   clear: both; }
 
-/* line 382, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 383, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #info abbr, #toolbox abbr {
-  font-size: 0.8em;
+  font-size: 0.8rem;
   color: #5696e0;
   border-bottom: 1px dotted #5696e0;
   cursor: pointer; }
 
-/* line 389, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 390, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #info {
   -js-display: flex;
   /* for polyfill */
@@ -959,7 +960,7 @@ dd {
       -ms-flex-pack: stretch;
           justify-content: stretch;
   padding: 10px 0 0 10px; }
-  /* line 394, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 395, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #info > div {
     border: 1px solid #999;
     background: #fff;
@@ -978,7 +979,7 @@ dd {
 
 /* NARROWEST: STACK SECTIONS AND FILL TO SCREEN EDGE */
 @media screen and (max-width: 499px) {
-  /* line 406, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 407, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #info > div {
     -webkit-flex-basis: 95%;
         -ms-flex-preferred-size: 95%;
@@ -987,7 +988,7 @@ dd {
 
 /* MEDIUM: STACK SECTIONS AND ALLOW SMALL MARGIN */
 @media screen and (min-width: 500px) and (max-width: 799px) {
-  /* line 412, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 413, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #info > div {
     -webkit-flex-basis: 45%;
         -ms-flex-preferred-size: 45%;
@@ -996,7 +997,7 @@ dd {
 
 /* WIDE: FLEXBOX, 2-COLUMNS, CENTRED, AUTO MARGIN */
 @media screen and (min-width: 800px) and (max-width: 1040px) {
-  /* line 418, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+  /* line 419, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
   #info > div {
     -webkit-flex-basis: 30%;
         -ms-flex-preferred-size: 30%;
@@ -1006,7 +1007,7 @@ dd {
 /*
  * DRAG & DROP
  */
-/* line 426, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 427, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 [draggable] {
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -1016,19 +1017,19 @@ dd {
   -khtml-user-drag: element;
   -webkit-user-drag: element; }
 
-/* line 435, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 436, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .dragging {
   opacity: 0.8;
   color: #6894D1; }
 
-/* line 439, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 440, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 .drag-enter {
   color: #C93742; }
 
 /*
  * Tooltip.js styles
  */
-/* line 447, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
+/* line 448, /Users/martin/Dropbox/htdocs/2016/vuejs-taskapp/css/taskapp.scss */
 #tooltip {
   position: absolute;
   background: rgba(86, 150, 224, 0.7);
