@@ -24,6 +24,7 @@ describe('Root Vue instance', function() {
 
     it('should exist', function(done) {     // PASSES
         expect(TaskApp.vm).to.satisfy(isaVue);
+        sinon.assert.notCalled(console.log);
 
         function isaVue(vm) {
             return vm._isVue === true;
